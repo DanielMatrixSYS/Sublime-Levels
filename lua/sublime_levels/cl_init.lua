@@ -178,7 +178,7 @@ function Sublime:DrawPanelTip(panel, str)
     tip.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, c.Royal);
         draw.RoundedBox(8, 1, 1, w - 2, h - 2, c.Black);
-        self:DrawTextOutlined(str, "Sublime.20", w / 2, h / 2, c.White, c.Black, TEXT_ALIGN_CENTER, true);
+        self:DrawTextOutlined(str, "Sublime.18", w / 2, h / 2, c.White, c.Black, TEXT_ALIGN_CENTER, true);
     end
 
     tip.Think = function()

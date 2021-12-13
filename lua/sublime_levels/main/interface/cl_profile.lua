@@ -187,9 +187,9 @@ function panel:Paint(w, h)
     surface.SetDrawColor(200, 200, 200, 100);
     surface.DrawRect(5, 50, w - 10, 1);
 
-    Sublime:DrawTextOutlined(self.PlayerNick, "Sublime.14", 50, 26, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
-    Sublime:DrawTextOutlined("Level: " .. self.Level, "Sublime.14", 10, 65, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
-    Sublime:DrawTextOutlined("Experience: " .. string.Comma(self.Experience) .. "/" .. string.Comma(self.Needed), "Sublime.14", 10, 85, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+    Sublime:DrawTextOutlined(self.PlayerNick, "Sublime.20", 50, 26, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+    Sublime:DrawTextOutlined("Level: " .. self.Level, "Sublime.20", 10, 65, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+    Sublime:DrawTextOutlined("Experience: " .. string.Comma(self.Experience) .. "/" .. string.Comma(self.Needed), "Sublime.20", 10, 85, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 end
 vgui.Register("Sublime.Profile", panel, "EditablePanel");
 

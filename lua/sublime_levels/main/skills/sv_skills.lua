@@ -129,10 +129,6 @@ hook.Add("Sublime.InitializeSkills", path, function(ply, data)
         return;
     end
 
-    if (not Sublime.Settings.Get("other", "skills_enabled", "boolean")) then
-        return;
-    end
-
     -- Set every integer in the skills table to 0 first
     for k, v in ipairs(Sublime.Skills) do
         ply:SL_SetInteger(v.Identifier, 0);
