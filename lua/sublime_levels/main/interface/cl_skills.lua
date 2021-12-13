@@ -61,7 +61,7 @@ function panel:Init()
         local color1 = self.CA(Sublime:LightenColor(self.C.Red, 50), panel.Alpha);
 
         draw.RoundedBox(8, 0, 0, w, h, color1);
-        Sublime:DrawTextOutlined("Reset Skills", "Sublime.14", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+        Sublime:DrawTextOutlined("Reset Skills", "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
     
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {100, 2}, {50, 2});
     end
@@ -107,11 +107,18 @@ function panel:CreateSkill(category, data)
     local desc      = data.Description;
     local id        = data.Identifier; 
     local amount    = data.ButtonAmount;
+    local amountPer = data.AmountPerPoint
 
     local unlockSize    = 28;
     local iconSize      = 16;
 
     local skillAmount   = self.Player:SL_GetInteger(id);
+    local currentAmount = self.Player:SL_GetInteger(id) * amountPer
+
+    if (id == "bargain") then
+        currentAmount = (self.Player:SL_GetInteger(id) * amountPer) * 100
+    end
+
     local unlocked      = skillAmount >= amount;
     local nextUnlock    = skillAmount + 1;
 
@@ -123,30 +130,33 @@ function panel:CreateSkill(category, data)
 
         skillAmount = self.Player:SL_GetInteger(id);
 
-        Sublime:DrawTextOutlined(name .. " - " .. skillAmount .. "/" .. amount, "Sublime.20", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(name .. " - " .. skillAmount .. "/" .. amount .. " - " .. currentAmount .. "%", "Sublime.18", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 
         for i = 1, amount do
             unlocked    = skillAmount >= i;
             nextUnlock  = skillAmount + 1;
 
             local unlockAble    = nextUnlock == i;
-            local color         = (unlocked or unlockAble) and self.C.Green or self.C.Red;
+            local color         = (unlocked or unlockAble) and self.CA(self.C.Green, 50) or self.CA(self.C.Red, 50);
 
             surface.SetDrawColor(color)
-            surface.DrawOutlinedRect(5 + (unlockSize + 5) * (i - 1), h - (unlockSize + 3), unlockSize, unlockSize);
+            surface.DrawOutlinedRect(5 + (unlockSize + 5) * (i - 1), h / 2, unlockSize, unlockSize);
 
             local material = (unlocked and Sublime.Materials["SL_Acquired"] or unlockAble and Sublime.Materials["SL_Unlocked"]) or Sublime.Materials["SL_Locked"];
-            Sublime:DrawMaterialOutline((5 + (iconSize / 2) - 2) + ((unlockSize) + 5) * (i - 1), h - (unlockSize + 3) + ((iconSize / 2) - 2), 16, 16, material, self.C.Black, self.C.White);
+            Sublime:DrawMaterialOutline((5 + (iconSize / 2) - 2) + ((unlockSize) + 5) * (i - 1), (h / 2) + (8 - 3), 16, 16, material, self.CA(self.C.Black, 200), self.CA(self.C.White, 200));
         end
     end
 
     skill.PerformLayout = function(panel, w, h)
         if (IsValid(panel.Upgrade)) then
-            panel.Upgrade:SetPos(w - 105, h - 31);
+            panel.Upgrade:SetPos(w - 105, h / 2);
             panel.Upgrade:SetSize(100, 28);
         end
-
-        panel.Help:SetPos(w - 21, 1);
+        
+        surface.SetFont("Sublime.18");
+        local textWidth = surface.GetTextSize(name .. " - " .. skillAmount .. "/" .. amount .. " - ");
+        
+        panel.Help:SetPos(textWidth + 500, 1);
         panel.Help:SetSize(20, 20);
     end
 
@@ -172,7 +182,7 @@ function panel:CreateSkill(category, data)
     skill.Upgrade.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, self.CA(self.C.Outline, panel.Alpha));
         
-        Sublime:DrawTextOutlined("Upgrade", "Sublime.14", 31, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+        Sublime:DrawTextOutlined("Upgrade", "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {200, 4}, {100, 2});
     end
 
@@ -243,7 +253,7 @@ function panel:CreateCategory(category, first)
     cat.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100));
         
-        Sublime:DrawTextOutlined(category, "Sublime.18", 5, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(category, "Sublime.22", 5, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 
         if (first) then
             Sublime:DrawTextOutlined(self.L("skills_available", self.Player:SL_GetInteger("ability_points")), "Sublime.20", w / 2, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
@@ -255,8 +265,8 @@ function panel:CreateCategory(category, first)
             local skill = panel.Skills[i];
 
             if (IsValid(skill)) then
-                skill:SetPos(5, 30 + 65 * (i - 1));
-                skill:SetSize(w - 10, 60);
+                skill:SetPos(5, 30 + 75 * (i - 1));
+                skill:SetSize(w - 10, 70);
             end
         end
 
@@ -311,7 +321,7 @@ function panel:PerformLayout(w, h)
         if (IsValid(item)) then
 
             local count     = table.Count(item.Skills);
-            local height    = item.Dropped and (30 + (65 * count)) or 30;
+            local height    = item.Dropped and (30 + (75 * count)) or 30;
 
             item:SetPos(5, yPos);
             item:SetSize((w - padding) - size, height);

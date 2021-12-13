@@ -233,10 +233,6 @@ function panel:Paint(w, h)
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
     surface.DrawRect(2, 32, w - 4, 1)
 
-    surface.SetFont("Sublime.20");
-    local strW, strH = surface.GetTextSize("Sublime");
-
-    draw.SimpleText("Sublime", "Sublime.20", 8, 17, Sublime.Colors.Black, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
-    draw.SimpleText("Levels", "Sublime.20", 8 + strW, 17, Sublime.Colors.Red, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined("Sublime Levels", "Sublime.20", 8, 17, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 end
 vgui.Register("Sublime.Interface", panel, "EditablePanel");

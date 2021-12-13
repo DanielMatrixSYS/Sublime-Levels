@@ -35,8 +35,8 @@ local leaderboardMaskSizes = {
 }
 
 local leaderboardFontSises = {
-    [1] = "18",
-    [2] = "16"
+    [1] = "24",
+    [2] = "20"
 }
 
 ---
@@ -45,7 +45,7 @@ local leaderboardFontSises = {
 function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, experience, needed, total_xp)
     local nextPlayer = #parent.Players + 1;
     local tall = leaderboardSizes[position] or 30;
-    local fontSize = leaderboardFontSises[position] or "14";
+    local fontSize = leaderboardFontSises[position] or "18";
 
     local name = steamid == LocalPlayer():SteamID64() and name .. " (You)" or name;
     local color = steamid == LocalPlayer():SteamID64() and Sublime.Colors.Green or Sublime.Colors.White;
@@ -302,7 +302,7 @@ function panel:Init()
         if (next(localData)) then
             Sublime:DrawTextOutlined(localData[1].position, "Sublime.20", 15, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
             Sublime:DrawTextOutlined(localData[1].name, "Sublime.20", s.Avatar.MaskSize + 51, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-            Sublime:DrawTextOutlined(localData[1].level, "Sublime.20", 300, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+            Sublime:DrawTextOutlined(localData[1].level, "Sublime.20", 296, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
             Sublime:DrawTextOutlined(comma(localData[1].experience) .. "/" .. comma(localData[1].needed_xp), "Sublime.20", w - 345, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
             Sublime:DrawTextOutlined(comma(localData[1].total_xp), "Sublime.20", w - 15, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER);
 
@@ -372,18 +372,18 @@ function panel:Paint(w, h)
 
     draw.RoundedBox(8, 5, 5, w - 10, 30, Color(0, 0, 0, 100));
 
-    Sublime:DrawTextOutlined("#", "Sublime.18", 15, 20, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-    Sublime:DrawTextOutlined(self.L("leaderboards_player"), "Sublime.18", 50, 20, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-    Sublime:DrawTextOutlined(self.L("leaderboards_level"), "Sublime.18", 300, 20, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-    Sublime:DrawTextOutlined(self.L("leaderboards_experience"), "Sublime.18", w - 345, 20, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-    Sublime:DrawTextOutlined(self.L("leaderboards_t_experience"), "Sublime.18", w - 15, 20, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined("#", "Sublime.22", 15, 18, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined(self.L("leaderboards_player"), "Sublime.22", 50, 18, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined(self.L("leaderboards_level"), "Sublime.22", 300, 18, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined(self.L("leaderboards_experience"), "Sublime.22", w - 345, 18, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined(self.L("leaderboards_t_experience"), "Sublime.22", w - 15, 18, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER);
 
     -- Leaderboard Pages.
     local stringWidth, stringHeight = surface.GetTextSize(self.Page .. "/" .. maxPages);
     stringWidth = stringWidth + 10;
 
-    draw.RoundedBox(8, (w / 2) - 8 - (stringWidth / 2), h - (16 + (stringHeight / 2)), stringWidth, stringHeight, Sublime.Colors.Black);
-    Sublime:DrawTextOutlined(self.Page .. "/" .. maxPages, "Sublime.20", (w / 2) - 8, h - 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+    draw.RoundedBox(8, (w / 2) - 9 - (stringWidth / 2), h - (16 + (stringHeight / 2)), stringWidth, stringHeight, Sublime.Colors.Black);
+    Sublime:DrawTextOutlined(self.Page .. "/" .. maxPages, "Sublime.18", (w / 2) - 9, h - 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
 end
 vgui.Register("Sublime.Leaderboards", panel, "EditablePanel");
 

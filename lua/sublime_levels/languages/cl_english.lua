@@ -63,6 +63,7 @@ Sublime.Languages["en"] =
 
     -- Options
         options_options = "Options",
+        reset_database = "Reset Database",
     --
 
     -- Players
@@ -148,8 +149,6 @@ Sublime.Languages["en"] =
         server_other_debug                  = "Should we enable debug messages in the console for the server?",
         server_other_xp_for_playing         = "How much experience should we get just for playing on the server?",
         server_other_xp_when                = "How frequent should we receive experience just for playing? These are in seconds.",
-        server_other_level_up_sound         = "What sound should we play for the player when he levels up? Relative to the /sound/ folder.",
-        server_other_experience_sound       = "What sound should we play for the player when he earns xp? Relative to the /sound/ folder.",
         server_other_prefix                 = "What should the prefix for the level/xp notifications be?",
         server_other_disable_notifications  = "Disable client chat notifications entierly?",
 
@@ -168,8 +167,8 @@ Sublime.Languages["en"] =
         xp_for_playing_when                     = "How often should players receieve experience just for playing, in seconds? Def. 600",
         xp_for_playing                          = "How much experience should players receive for just playing on the server? Def. 25",
         debug_enabled                           = "Should we enable debug mode serverside? Def. No",
-        sound_on_level                          = "What sound should we play for the player when they level up? Relative to sound folder. Def.",
-        sound_on_xp                             = "What sound should we play for players when they receive experience? Relative to sound folder. Def.",
+        sound_on_level                          = "What sound should we play for the player when they level up?",
+        sound_on_xp                             = "What sound should we play for players when they receive experience?",
         disable_notifications                   = "Should we globally disable notifications(Notifications, sounds, etc)? Def. No.",
         chat_prefix                             = "Chat prefix when receiving notifications? Def. [SublimeLevels]",
         lottery_winner                          = "How much experience should players who win the lottery get? Def. 2000",

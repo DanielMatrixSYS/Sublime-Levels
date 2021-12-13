@@ -24,7 +24,7 @@ function panel:CreateCategory(category, data)
     cat.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100));
         
-        Sublime:DrawTextOutlined(panel.Name, "Sublime.18", 5, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(panel.Name, "Sublime.22", 5, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
     end
 
     cat.PerformLayout = function(panel, w, h)
@@ -90,9 +90,9 @@ function panel:CreateCategory(category, data)
                 end
 
                 if (panel.Editing) then
-                    Sublime:DrawTextOutlined("PRESS A KEY", "Sublime.14", w / 2, h / 2, color, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+                    Sublime:DrawTextOutlined("PRESS A KEY", "Sublime.18", w / 2, h / 2, color, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
                 else
-                    Sublime:DrawTextOutlined(str, "Sublime.14", w / 2, h / 2, color, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+                    Sublime:DrawTextOutlined(str, "Sublime.18", w / 2, h / 2, color, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
                 end
             end
 
@@ -110,6 +110,7 @@ function panel:CreateCategory(category, data)
         else
             setting.Edit = setting:Add("DTextEntry");
             setting.Edit:SetDrawLanguageID(false);
+            setting.Edit:SetFont("Sublime.18");
             setting.Edit.Paint = function(panel, w, h)
                 draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100));
                 panel:DrawTextEntryText(self.C.Grey, self.C.Grey, self.C.Grey);
@@ -185,7 +186,7 @@ function panel:AddResetButton()
         local color1 = self.CA(Sublime:LightenColor(self.C.Red, 50), panel.Alpha);
 
         draw.RoundedBox(8, 0, 0, w, h, color1);
-        Sublime:DrawTextOutlined(self.L("client_default"), "Sublime.14", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+        Sublime:DrawTextOutlined(self.L("client_default"), "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
     
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {100, 2}, {50, 2});
     end

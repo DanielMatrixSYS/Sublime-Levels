@@ -26,7 +26,7 @@ function panel:CreateButtons()
             local color2 = self.CA(Sublime:DarkenColor(data.color, 25), panel.Alpha);
 
             Sublime:DrawRoundedGradient(panel, 8, 0, 0, w, h, color1, color2);
-            Sublime:DrawTextOutlined(data.name, "Sublime.20", 26, h / 2, self.C.White, self.C.Black, TEXT_ALIGN_LEFT, true);
+            Sublime:DrawTextOutlined(data.name, "Sublime.18", 26, h / 2, self.C.White, self.C.Black, TEXT_ALIGN_LEFT, true);
             
             local icon_size = 16;
             Sublime:DrawMaterialOutline(5, (h / 2) - (icon_size / 2), icon_size, icon_size, data.mat, self.C.Black, self.C.White);
@@ -106,7 +106,7 @@ function panel:Init()
         },
 
         {
-            name = "Reset Database",
+            name = self.L("reset_database"),
             ui = "Sublime.OptionsServer",
             color = Sublime.Colors.Pink,
             mat = Sublime.Materials["SL_ServerSettings"],

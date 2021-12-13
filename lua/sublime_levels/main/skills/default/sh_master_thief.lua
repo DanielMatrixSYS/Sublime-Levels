@@ -11,7 +11,7 @@ local SKILL = {};
 SKILL.Name              = "Break & Entry Master";
 
 -- The description of the skill.
-SKILL.Description       = "Lock pick time is reduced up to 75%";
+SKILL.Description       = "Lockpick time is reduced up to 75%";
 
 -- If the category of the skill does not exist then we will automatically create it.
 SKILL.Category          = "DarkRP"
