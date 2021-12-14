@@ -40,7 +40,6 @@ end
 local function createFont(name, size, weight)
     table.insert(Sublime.Fonts, {font = name, size = size});
     surface.CreateFont(name, {font = "Nunito", size = size, weight = (weight or 400)});
-    surface.CreateFont(name .. ".P", {font = "Nunito", size = size, weight = (weight or 400)});
 end
 
 ---

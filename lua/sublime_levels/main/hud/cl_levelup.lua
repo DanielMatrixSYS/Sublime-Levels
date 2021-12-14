@@ -58,10 +58,10 @@ hook.Add("HUDPaint", path, function()
 end);
 
 hook.Add("Sublime.LevelUpNotification", path, function(nLevel)
-    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. ".", shouldDisplay = CurTime(), alpha = 0, font = "Sublime.36.P", padding = 0});
-    table.insert(texts, {text = "You have reached level: " .. nLevel, shouldDisplay = CurTime() + 2, alpha = 0, font = "Sublime.36.P", padding = 5});
-    table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = CurTime() + 4, alpha = 0, font = "Sublime.30.P", padding = 50});
-    table.insert(texts, {text = "Your leaderboards position has changed.", shouldDisplay = CurTime() + 5, alpha = 0, font = "Sublime.30.P", padding = 50});
+    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. ".", shouldDisplay = CurTime(), alpha = 0, font = "Sublime.36", padding = 0});
+    table.insert(texts, {text = "You have reached level: " .. nLevel, shouldDisplay = CurTime() + 2, alpha = 0, font = "Sublime.36", padding = 5});
+    table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = CurTime() + 4, alpha = 0, font = "Sublime.30", padding = 50});
+    table.insert(texts, {text = "Your leaderboards position has changed.", shouldDisplay = CurTime() + 5, alpha = 0, font = "Sublime.30", padding = 50});
 
     lifetime = CurTime() + 10;
     fadeout = false;

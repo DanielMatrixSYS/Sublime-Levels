@@ -48,7 +48,7 @@ hook.Add("HUDPaint", path, function()
     local perc = experience / needed;
     surface.DrawRect(0, y - 24, width * perc, size - 1);
 
-    Sublime:DrawTextOutlined(math.floor(perc * 100) .. "%", "Sublime.22.P", width / 2, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
-    Sublime:DrawTextOutlined(level - 1, "Sublime.22.P", 5, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
-    Sublime:DrawTextOutlined(level + 1, "Sublime.22.P", width - 5, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_RIGHT, true);
+    Sublime:DrawTextOutlined(math.floor(perc * 100) .. "%", "Sublime.22", width / 2, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+    Sublime:DrawTextOutlined(level - 1, "Sublime.22", 5, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+    Sublime:DrawTextOutlined(level + 1, "Sublime.22", width - 5, y - 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_RIGHT, true);
 end);

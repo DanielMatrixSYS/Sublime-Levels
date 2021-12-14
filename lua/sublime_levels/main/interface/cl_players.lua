@@ -51,7 +51,7 @@ function panel:AddPlayer(parent, ply)
     parent.Players[nextPlayer].Paint = function(s, w, h)
         draw.RoundedBox(8, 0, 0, w, h, self.CA(self.C.Outline, s.Alpha));
 
-        if (s:IsHovered()) then
+        if (s:IsHovered() and not ply:IsBot()) then
             if (Sublime.Config.ConfigAccess[LocalPlayer():GetUserGroup()]) then
                 Sublime:DrawPanelTip(s, "Left click on the player row to adjust the players leveling data");
             end
@@ -72,6 +72,10 @@ function panel:AddPlayer(parent, ply)
         if (not Sublime.Config.ConfigAccess[LocalPlayer():GetUserGroup()]) then
             Sublime.MakeNotification("Invalid Access", "You don't have access to this side of things, if you believe this is wrong then contact the server owner.", "Ok", false);
 
+            return;
+        end
+
+        if (ply:IsBot()) then
             return;
         end
 
