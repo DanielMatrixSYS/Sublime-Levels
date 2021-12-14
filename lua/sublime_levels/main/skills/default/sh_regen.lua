@@ -47,7 +47,7 @@ if (SERVER and SKILL.Enabled) then
         end
 
         if (IsValid(ent) and ent:IsPlayer()) then
-            if (SKILL.Enabled and dmg:GetDamage() >= 1) then
+            if (dmg:GetDamage() >= 1) then
                 local points = ent:SL_GetInteger(SKILL.Identifier, 0) * SKILL.AmountPerPoint;
 
                 if (points > 0) then

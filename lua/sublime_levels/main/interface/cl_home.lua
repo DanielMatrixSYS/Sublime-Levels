@@ -41,10 +41,6 @@ function panel:CreateStats()
             self:AddStats(self.PlayerStats, L("home_available_points"), points, false);
         end
     --
-
-    -- Leaderboards Rank
-        self:AddStats(self.PlayerStats, L("home_leaderboards_rank"), comma(Sublime.Cached_Data["Personal_Rank"]), false);
-    --
 end
 
 ---
@@ -72,8 +68,8 @@ function panel:AddStats(parent, title, description, ...)
             draw.RoundedBox(8, 0, 0, width, h, self.CA(col, 50));
         end
 
-        Sublime:DrawTextOutlined(title, "Sublime.20.P", 5, h / 2, Sublime:LightenColor(self.C.Grey, 50), Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
-        Sublime:DrawTextOutlined(description, "Sublime.20.P", w - 5, h / 2, Sublime:LightenColor(self.C.Grey, 50), Sublime.Colors.Black, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER);
+        Sublime:DrawTextOutlined(title, "Sublime.20", 5, h / 2, Sublime:LightenColor(self.C.Grey, 50), Sublime.Colors.Black, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER);
+        Sublime:DrawTextOutlined(description, "Sublime.20", w - 5, h / 2, Sublime:LightenColor(self.C.Grey, 50), Sublime.Colors.Black, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER);
     end
 end
 
@@ -106,7 +102,7 @@ function panel:Init()
     self.PlayerStats.Paint = function(s, w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100));
 
-        Sublime:DrawTextOutlined(Sublime.L("home_personal_stats"), "Sublime.32.P", w / 2, 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+        Sublime:DrawTextOutlined(Sublime.L("home_personal_stats"), "Sublime.32", w / 2, 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
         surface.SetDrawColor(self.C.Outline);
         surface.DrawRect(0, 38, w, 1);
     end
@@ -139,7 +135,7 @@ function panel:Init()
         surface.SetMaterial(Sublime.Materials["SL_World"]);
         surface.DrawTexturedRect(5, 4, 30, 30);
 
-        Sublime:DrawTextOutlined(Sublime.L("home_global_stats"), "Sublime.32.P", w / 2, 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+        Sublime:DrawTextOutlined(Sublime.L("home_global_stats"), "Sublime.32", w / 2, 16, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
     end
 
     self:CreateStats();

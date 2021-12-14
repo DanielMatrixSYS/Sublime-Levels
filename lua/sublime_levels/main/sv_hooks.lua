@@ -12,6 +12,8 @@ util.AddNetworkString("Sublime.PlayerReceivedExperience");
 local SQL   = Sublime.GetSQL();
 local path  = Sublime.GetCurrentPath();
 
+local to = tonumber;
+
 hook.Add("PlayerDisconnected", path, function(ply)
     if (not ply:IsBot()) then
         ply:SL_Save();
@@ -19,32 +21,13 @@ hook.Add("PlayerDisconnected", path, function(ply)
 end);
 
 local function openSublimeMenu(ply)
-    local total_xp      = sql.QueryValue(SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
-    local global_data   = sql.Query("SELECT ExperienceGained, LevelsGained FROM Sublime_Data");
-    local ranks         = sql.Query("SELECT SteamID FROM Sublime_Levels ORDER BY TotalExperience DESC");
-    local to            = tonumber;
-    local my_position   = 0;
-    local my_steamid    = ply:SteamID64(); 
-
-    for i = 1, #ranks do
-        local data = ranks[i];
-
-        if (data) then
-            local steamid = data["SteamID"];
-
-            if (steamid == my_steamid) then
-                my_position = i;
-
-                break;
-            end
-        end
-    end
+    local total_xp    = sql.QueryValue(SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
+    local global_data = sql.Query("SELECT ExperienceGained, LevelsGained FROM Sublime_Data");
 
     net.Start("Sublime.Interface");
         net.WriteUInt(to(total_xp), 32);
         net.WriteUInt(to(global_data[1]["ExperienceGained"]), 32);
         net.WriteUInt(to(global_data[1]["LevelsGained"]), 32);
-        net.WriteUInt(my_position, 32);
     net.Send(ply);
 end
 

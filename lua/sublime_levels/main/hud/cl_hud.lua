@@ -51,8 +51,8 @@ hook.Add("HUDPaint", path, function()
 
     Sublime.Arc(x, y, 40, 5, 0, round((experience / needed) * 362), 0, col);
 
-    Sublime:DrawTextOutlined(level .. "/" .. Sublime.Settings.Table["SERVER"]["other"]["max_level"], "Sublime.22.P", x, y + 55, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
-    Sublime:DrawTextOutlined(comma(round(experience)) .. "/" .. comma(needed), "Sublime.22.P", x, y + 75, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+    Sublime:DrawTextOutlined(level .. "/" .. Sublime.Settings.Table["SERVER"]["other"]["max_level"], "Sublime.22", x, y + 55, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+    Sublime:DrawTextOutlined(comma(round(experience)) .. "/" .. comma(needed), "Sublime.22", x, y + 75, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
 
     gained = math.Approach(gained, received, 3);
     if (gained > 0) then
@@ -68,7 +68,7 @@ hook.Add("HUDPaint", path, function()
             end
         end
 
-        Sublime:DrawTextOutlined("+" .. comma(gained), "Sublime.22.P", x - 1, y - 1, Color(255, 255, 255, alpha), Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, true);
+        Sublime:DrawTextOutlined("+" .. comma(gained), "Sublime.22", x - 1, y - 1, Color(255, 255, 255, alpha), Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, true);
     end
 end);
 

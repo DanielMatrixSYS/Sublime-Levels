@@ -25,9 +25,10 @@ local color_func = Color;
 
 local darkRoyal = Sublime:DarkenColor(color.Royal, 50);
 
+local gained    = 0;
 local received  = 0;
 local alpha     = 0;
-local fade      = false;
+local lifetime  = CurTime();
 
 hook.Add("HUDPaint", path, function()
     localplayer = localplayer and IsValid(localplayer) and localplayer or LocalPlayer();
@@ -49,7 +50,7 @@ hook.Add("HUDPaint", path, function()
     local have      = localplayer:SL_GetExperience();
     local needed    = localplayer:SL_GetNeededExperience();
     local level     = localplayer:SL_GetLevel();
-    experience      = lerp(0.01, experience, have);
+    experience      = lerp(0.1, experience, have);
 
     local percentage = experience / needed;
 
@@ -61,38 +62,37 @@ hook.Add("HUDPaint", path, function()
     draw.RoundedBox(8, barPosX + 1, barPosY + 1, barWidth - 2, barHeight - 2, color.Black);
     Sublime:DrawRoundedGradient(nil, 8, barPosX + 1, barPosY + 1, (barWidth - 2) * percentage, barHeight - 2, dark, light);
 
-    local str = round(percentage * 100, 1) .. "%";
+    local str = math.ceil(round(percentage * 100, 1)) .. "%";
 
-    surface.SetFont("Sublime.20");
+    surface.SetFont("Sublime.18");
     local size = surface.GetTextSize(str);
-    Sublime:DrawTextOutlined(str, "Sublime.20", barPosX + (barWidth / 2) - (size / 2), barPosY + 1, color.White, color.Black, true);
+    Sublime:DrawTextOutlined(str, "Sublime.18", barPosX + (barWidth / 2) - (size / 2), barPosY + 1, color.White, color.Black, true);
 
     have, needed = comma(have), comma(needed);
     local size = surface.GetTextSize(have .. "/" .. needed);
-    Sublime:DrawTextOutlined(have .. "/" .. needed, "Sublime.20", barPosX + (barWidth / 2), barPosY - 10, color.White, color.Black, TEXT_ALIGN_CENTER, true);
-    
-    Sublime:DrawTextOutlined("+" .. comma(received), "Sublime.20", barPosX + (barWidth / 2), barPosY - 25, colorAlpha(color.Green, alpha), colorAlpha(color.Black, alpha), TEXT_ALIGN_CENTER, true);
 
-    if (fade) then
-        if (alpha < 255) then
-            alpha = approach(alpha, 255, 2);
+    Sublime:DrawTextOutlined(have .. "/" .. needed, "Sublime.18", barPosX + (barWidth / 2), barPosY - 10, color.White, color.Black, TEXT_ALIGN_CENTER, true);
+    Sublime:DrawTextOutlined("+" .. comma(gained), "Sublime.18", barPosX + (barWidth / 2), barPosY - 25, colorAlpha(color.Green, alpha), colorAlpha(color.Black, alpha), TEXT_ALIGN_CENTER, true);
+
+    gained = approach(gained, received, 3);
+    if (gained > 0) then
+        if (lifetime >= CurTime()) then
+            if (alpha < 255) then
+                alpha = approach(alpha, 255, 2);
+            end
         else
-            fade = false;
-        end
-    else
-        if (alpha > 0) then
-            alpha = approach(alpha, 0, 0.5);
-        else
-            received = 0;
+            if (alpha > 0) then
+                alpha = approach(alpha, 0, 0.3);
+            else
+                if (alpha == 0) then
+                    received = 0;
+                end
+            end
         end
     end
 end);
 
 hook.Add("Sublime.ExperienceReceived", path, function(gained)
     received = received + gained;
-    fade = true;
-
-    if (alpha > 0) then
-        fade = true;
-    end
+    lifetime = CurTime() + 10;
 end);

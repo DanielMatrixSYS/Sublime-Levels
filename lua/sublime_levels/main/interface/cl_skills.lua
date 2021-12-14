@@ -47,7 +47,7 @@ function panel:Init()
         end
 
         if (enabled) then
-            self:CreateSkill(cat, data);
+            self:CreateSkill(cat, data, i);
         end
     end
 
@@ -93,7 +93,18 @@ function panel:CategoryExists(check)
     return false;
 end
 
-function panel:CreateSkill(category, data)
+function panel:CalculateCurrentBonus(data, id)
+    local skillAmount   = self.Player:SL_GetInteger(id);
+    local currentAmount = skillAmount * data.AmountPerPoint
+
+    if (id == "bargain" or id == "damage_increase" or id == "master_thief" or id == "regeneration") then
+        currentAmount = (skillAmount * data.AmountPerPoint) * 100
+    end
+
+    return currentAmount;
+end
+
+function panel:CreateSkill(category, data, index)
     if (not IsValid(category)) then
         return false;
     end
@@ -113,11 +124,7 @@ function panel:CreateSkill(category, data)
     local iconSize      = 16;
 
     local skillAmount   = self.Player:SL_GetInteger(id);
-    local currentAmount = self.Player:SL_GetInteger(id) * amountPer
-
-    if (id == "bargain") then
-        currentAmount = (self.Player:SL_GetInteger(id) * amountPer) * 100
-    end
+    local currentAmount = self:CalculateCurrentBonus(data, id);
 
     local unlocked      = skillAmount >= amount;
     local nextUnlock    = skillAmount + 1;
@@ -130,7 +137,7 @@ function panel:CreateSkill(category, data)
 
         skillAmount = self.Player:SL_GetInteger(id);
 
-        Sublime:DrawTextOutlined(name .. " - " .. skillAmount .. "/" .. amount .. " - " .. currentAmount .. "%", "Sublime.18", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(name .. " - " .. skillAmount .. "/" .. amount .. " - Current bonus: " .. self:CalculateCurrentBonus(Sublime.Skills[index], id) .. "%", "Sublime.18", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 
         for i = 1, amount do
             unlocked    = skillAmount >= i;
@@ -153,10 +160,7 @@ function panel:CreateSkill(category, data)
             panel.Upgrade:SetSize(100, 28);
         end
         
-        surface.SetFont("Sublime.18");
-        local textWidth = surface.GetTextSize(name .. " - " .. skillAmount .. "/" .. amount .. " - ");
-        
-        panel.Help:SetPos(textWidth + 500, 1);
+        panel.Help:SetPos(w - 19, 1);
         panel.Help:SetSize(20, 20);
     end
 
@@ -198,6 +202,8 @@ function panel:CreateSkill(category, data)
                 net.Start("Sublime.UpgradeSkill");
                     net.WriteString(id);
                 net.SendToServer();
+
+                refresh = true;
             end
         else
             Sublime.MakeNotification("Unable", "You don't have enough skill points to upgrade this skill.");

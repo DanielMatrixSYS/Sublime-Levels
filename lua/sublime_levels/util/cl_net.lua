@@ -37,7 +37,6 @@ net.Receive("Sublime.Interface", function()
     Sublime.Cached_Data["Personal_Experience"]  = net.ReadUInt(32);
     Sublime.Cached_Data["Global_Experience"]    = net.ReadUInt(32);
     Sublime.Cached_Data["Global_Levels"]        = net.ReadUInt(32);
-    Sublime.Cached_Data["Personal_Rank"]        = net.ReadUInt(32);
 
     local ui = vgui.Create("Sublime.Interface");
     ui:SetSize(ScrW() / 1.5, 600);
