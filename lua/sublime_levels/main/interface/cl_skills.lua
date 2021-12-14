@@ -202,8 +202,6 @@ function panel:CreateSkill(category, data, index)
                 net.Start("Sublime.UpgradeSkill");
                     net.WriteString(id);
                 net.SendToServer();
-
-                refresh = true;
             end
         else
             Sublime.MakeNotification("Unable", "You don't have enough skill points to upgrade this skill.");
