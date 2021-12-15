@@ -11,7 +11,7 @@ local SKILL = {};
 SKILL.Name              = "A Glitch In The Boullet";
 
 -- The description of the skill.
-SKILL.Description       = "After shooting you'll have a small chance to retrieve the ammo back into the same clip.\nUp to a total of 5%";
+SKILL.Description       = "After shooting you'll have a small chance to not consume the bullet.\nUp to a total of 5%";
 
 -- If the category of the skill does not exist then we will automatically create it.
 SKILL.Category          = "Weapons"
