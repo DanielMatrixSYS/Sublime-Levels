@@ -14,7 +14,7 @@ SKILL.Name              = "Killology";
 SKILL.Description       = "Increases the damage output of your weapons. An increase up to a total of 5%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Strength"
+SKILL.Category          = "Weapons"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "damage_increase";

@@ -14,7 +14,7 @@ SKILL.Name              = "Feuerfest";
 SKILL.Description       = "Reduces damage from fire up to a total of 75%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Strength"
+SKILL.Category          = "Physical"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "fire_damage_resistance";

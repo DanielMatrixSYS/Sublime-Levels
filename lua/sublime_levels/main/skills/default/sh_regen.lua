@@ -11,10 +11,10 @@ local SKILL = {};
 SKILL.Name              = "Regeneration";
 
 -- The description of the skill.
-SKILL.Description       = "Regenerates your health when you're not in combat. Regenerates up to 2% of your max health every other second.";
+SKILL.Description       = "Regenerates your health when you're not in combat.\nRegenerates up to 2% of your max health every other second.";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Strength"
+SKILL.Category          = "Physical"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "regeneration";

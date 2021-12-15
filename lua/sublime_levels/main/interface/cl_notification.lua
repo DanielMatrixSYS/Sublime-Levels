@@ -172,7 +172,7 @@ function panel:Paint(w, h)
     surface.DrawOutlinedRect(1, 1, w - 2, h - 2)
     surface.DrawRect(2, 32, w - 4, 1)
 
-    Sublime:DrawTextOutlined(self.Title, "Sublime.20", 5, 9, self.C.White, self.C.Black, TEXT_ALIGN_LEFT);
-    Sublime:DrawTextOutlined(Sublime.textWrap(self.Description, "Sublime.20", w - 14), "Sublime.20", w / 2, 55, self.C.White, self.C.Black, TEXT_ALIGN_CENTER);
+    Sublime:DrawTextOutlined(self.Title, "Sublime.20", 5, 7, self.C.White, self.C.Black, TEXT_ALIGN_LEFT);
+    Sublime:DrawTextOutlined(Sublime.textWrap(self.Description, "Sublime.18", w - 14), "Sublime.18", w / 2, 55, self.C.White, self.C.Black, TEXT_ALIGN_CENTER);
 end
 vgui.Register("Sublime.Notification", panel, "EditablePanel");

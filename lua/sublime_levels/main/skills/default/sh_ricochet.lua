@@ -11,7 +11,7 @@ local SKILL = {};
 SKILL.Name              = "Ricochet";
 
 -- The description of the skill.
-SKILL.Description       = "The bullets that hit you have a chance to ricochet back to the shooter. Up to 20%";
+SKILL.Description       = "The bullets that hit you have a chance to ricochet back to the shooter.\nUp to 20%";
 
 -- If the category of the skill does not exist then we will automatically create it.
 SKILL.Category          = "General"
@@ -26,9 +26,13 @@ SKILL.AmountPerPoint    = 5;
 -- Should we enable this skill?
 SKILL.Enabled           = true;
 
-if (SERVER) then
+if (SERVER and SKILL.Enabled) then
     hook.Add("EntityTakeDamage", path, function(target, data)
-        if (IsValid(target) and target:IsPlayer() and SKILL.Enabled) then
+        if (IsValid(target) and target:IsPlayer()) then
+            if (not Sublime.Settings.Get("other", "skills_enabled", "boolean")) then
+                return;
+            end
+
             local attacker = data:GetAttacker();
 
             if (IsValid(attacker) and attacker:IsPlayer() and data:IsDamageType(DMG_BULLET)) then
@@ -45,7 +49,7 @@ if (SERVER) then
 
                         attacker:TakeDamage(damage, attacker);
 
-                        Sublime.Notify(target, "You ricoched " .. damage .. " damage back to " .. attacker:Nick());
+                        Sublime.Notify(target, "You ricochet " .. damage .. " damage back to " .. attacker:Nick());
                     end
                 end
             end

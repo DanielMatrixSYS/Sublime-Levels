@@ -10,6 +10,7 @@ util.AddNetworkString("Sublime.GetLeaderboardsData");
 util.AddNetworkString("Sublime.SendLeaderboardsData");
 util.AddNetworkString("Sublime.AdminAdjustData");
 util.AddNetworkString("Sublime.ResetDatabase");
+util.AddNetworkString("Sublime.DeleteUser");
 
 local SQL = Sublime.GetSQL();
 
@@ -218,6 +219,22 @@ net.Receive("Sublime.ResetDatabase", function(_, ply)
     sql.Query("DROP TABLE Sublime_Data");
 
     RunConsoleCommand("changelevel", game.GetMap());
+end);
+
+net.Receive("Sublime.DeleteUser", function(_, ply)
+    if (not ply:IsSuperAdmin()) then
+        return;
+    end
+
+    local steamid = net.ReadString();
+    
+    sql.Query("DELETE FROM Sublime_Levels WHERE SteamID = '" .. steamid .. "'");
+    sql.Query("DELETE FROM Sublime_Skills WHERE SteamID = '" .. steamid .. "'");
+
+    local target = player.GetBySteamID64(steamid);
+    if (IsValid(target)) then
+        target:Kick("Your Sublime Levels data has been nullified. Please reconnect.");
+    end
 end);
 
 concommand.Add("sublimelevels_give_xp", function(ply, cmd, args)
