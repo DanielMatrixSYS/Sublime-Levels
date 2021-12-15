@@ -14,7 +14,7 @@ SKILL.Name              = "Experienced Player";
 SKILL.Description       = "Increases the amount of experience you receive up to a total of 45%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Extras"
+SKILL.Category          = "Other"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "experienced_player";

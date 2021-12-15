@@ -8,16 +8,16 @@ local path  = Sublime.GetCurrentPath();
 local SKILL = {};
 
 -- This is the name of the skill.
-SKILL.Name              = "One Man Army";
+SKILL.Name              = "Lifesteal";
 
 -- The description of the skill.
-SKILL.Description       = "Reduces damage from incoming bullets of all types up to a total of 10%";
+SKILL.Description       = "Damaging other players or NPC's has a chance to heal you.\nUp to 10% chance and 10% lifesteal.";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Physical"
+SKILL.Category          = "Weapons"
 
 -- This is the identifier in the database, needs to be unqiue.
-SKILL.Identifier        = "bullet_damage_resistance";
+SKILL.Identifier        = "lifesteal";
 
 -- The amount of buttons on the skill page.
 SKILL.ButtonAmount      = 10;
@@ -27,24 +27,29 @@ SKILL.AmountPerPoint    = 1;
 SKILL.Enabled           = true;
 
 if (SERVER and SKILL.Enabled) then
-    hook.Add("EntityTakeDamage", path, function(ent, dmg)
+    hook.Add("PostEntityTakeDamage", path, function(ent, dmg, took)
         if (not Sublime.Settings.Get("other", "skills_enabled", "boolean")) then
             return;
         end
 
-        if (IsValid(ent) and ent:IsPlayer()) then
-            if (dmg:GetDamage() > 1 and dmg:IsDamageType(DMG_BULLET)) then
-                local points = ent:SL_GetInteger(SKILL.Identifier, 0) * SKILL.AmountPerPoint;
+        local damage    = dmg:GetDamage();
+        local attacker  = dmg:GetAttacker();
 
-                if (points < 1) then
-                    return;
+        if (IsValid(ent) and damage > 0 and took) then
+            if (IsValid(attacker) and attacker:IsPlayer()) then
+                local points = attacker:SL_GetInteger(SKILL.Identifier, 0) * SKILL.AmountPerPoint;
+
+                if (points > 0) then
+                    local randomNum = math.random(1, 100);
+                    
+                    if (randomNum <= points) then
+                        local toHeal = math.ceil(damage * (points / 100));
+
+                        attacker:SetHealth(attacker:Health() + toHeal);
+                    end
                 end
-
-                local modifier = 1 - (points / 100);
-                dmg:ScaleDamage(modifier);
             end
         end
     end);
 end
-
 Sublime.AddSkill(SKILL);

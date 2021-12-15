@@ -14,7 +14,7 @@ SKILL.Name              = "Tank";
 SKILL.Description       = "Reduces incoming damage from NPC's by 50%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Strength"
+SKILL.Category          = "Physical"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "npc_damage_resistance";

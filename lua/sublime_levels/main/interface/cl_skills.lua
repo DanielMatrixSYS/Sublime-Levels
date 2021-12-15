@@ -17,6 +17,8 @@ function panel:Init()
     self.CA         = ColorAlpha;
     self.Categories = {};
 
+    local folderName = gmod.GetGamemode().FolderName;
+
     self.ScrollPanel = self:Add("DScrollPanel");
     local vBar = self.ScrollPanel:GetVBar();
 
@@ -34,20 +36,30 @@ function panel:Init()
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {75, 2}, {25, 2}, panel:GetParent().Dragging); 
     end  
 
+    self:CreateCategory("Physical", true);
+    self:CreateCategory("Weapons", false);
+
+    if (folderName == "darkrp") then
+        self:CreateCategory("DarkRP", false);
+    end
+
+    if (folderName == "terrortown") then
+        self:CreateCategory("Trouble in terrorist town", false);
+    end
+
+    self:CreateCategory("Other", false);
+
     for i = 1, #Sublime.Skills do
-        local data          = Sublime.Skills[i];
-        local category      = data.Category;
-        local enabled       = data.Enabled;
-        local exists, cat   = self:CategoryExists(category);
-
-        if (not exists) then
-            local first = i == 1;
-
-            cat = self:CreateCategory(category, first);
-        end
+        local data      = Sublime.Skills[i];
+        local category  = data.Category;
+        local enabled   = data.Enabled;
 
         if (enabled) then
-            self:CreateSkill(cat, data, i);
+            local exists, panel = self:CategoryExists(category);
+
+            if (exists) then
+                self:CreateSkill(panel, data, i);
+            end
         end
     end
 
@@ -202,8 +214,6 @@ function panel:CreateSkill(category, data, index)
                 net.Start("Sublime.UpgradeSkill");
                     net.WriteString(id);
                 net.SendToServer();
-
-                refresh = true;
             end
         else
             Sublime.MakeNotification("Unable", "You don't have enough skill points to upgrade this skill.");
@@ -259,7 +269,7 @@ function panel:CreateCategory(category, first)
     cat.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(0, 0, 0, 100));
         
-        Sublime:DrawTextOutlined(category, "Sublime.22", 5, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(category, "Sublime.22", 10, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 
         if (first) then
             Sublime:DrawTextOutlined(self.L("skills_available", self.Player:SL_GetInteger("ability_points")), "Sublime.20", w / 2, 15, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);

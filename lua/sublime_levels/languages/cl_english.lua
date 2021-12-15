@@ -48,7 +48,7 @@ Sublime.Languages["en"] =
     --
 
     -- Skills
-        skills_strength     = "Strength",
+        skills_strength     = "Physical Attributes",
         skills_intellect    = "Intellect",
         skills_agility      = "Agility",
         skills_skills       = "Skills",

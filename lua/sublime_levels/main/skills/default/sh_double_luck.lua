@@ -11,7 +11,7 @@ local SKILL = {};
 SKILL.Name              = "Double Luck";
 
 -- The description of the skill.
-SKILL.Description       = "After you have won the lottery you'll have another chance to win half of what you originally won, up to 50%";
+SKILL.Description       = "After you have won the lottery you'll have another chance to win half of what you originally won.\nUp to 50%";
 
 -- If the category of the skill does not exist then we will automatically create it.
 SKILL.Category          = "DarkRP"

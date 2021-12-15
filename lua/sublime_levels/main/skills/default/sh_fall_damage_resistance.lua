@@ -14,7 +14,7 @@ SKILL.Name              = "Fall Damage Resistance";
 SKILL.Description       = "Reduces fall damage up to a total of 65%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "Strength"
+SKILL.Category          = "Physical"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "fall_damage_resistance";
