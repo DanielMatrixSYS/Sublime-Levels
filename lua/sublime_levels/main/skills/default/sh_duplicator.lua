@@ -11,7 +11,7 @@ local SKILL = {};
 SKILL.Name              = "The Duplicator";
 
 -- The description of the skill.
-SKILL.Description       = "After buying a piece of equipment you'll have a chance to receive the credit back.\nUp to a total of 20%";
+SKILL.Description       = "After buying a piece of equipment you'll have a chance to not consume the credit.\nUp to a total of 20%";
 
 -- If the category of the skill does not exist then we will automatically create it.
 SKILL.Category          = "Trouble in terrorist town"
