@@ -92,7 +92,7 @@ function panel:Init()
         {
             name = self.L("client_settings"),
             ui = "Sublime.OptionsClient",
-            color = Sublime.Colors.Purple,
+            color = Sublime.Colors.BlueIsh,
             mat = Sublime.Materials["SL_Settings"],
             access = true,
         },
@@ -100,15 +100,23 @@ function panel:Init()
         {
             name = self.L("server_settings"),
             ui = "Sublime.OptionsServer",
-            color = Sublime.Colors.Pink,
+            color = Sublime.Colors.YellowIsh,
             mat = Sublime.Materials["SL_ServerSettings"],
+            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()];
+        },
+
+        {
+            name = self.L("skill_settings"),
+            ui = "Sublime.OptionsSkills",
+            color = Sublime.Colors.Green,
+            mat = Sublime.Materials["SL_Upgrade"],
             access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()];
         },
 
         {
             name = self.L("reset_database"),
             ui = "Sublime.OptionsServer",
-            color = Sublime.Colors.Pink,
+            color = Sublime.Colors.Black,
             mat = Sublime.Materials["SL_ServerSettings"],
             access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()];
             clickoverride = function()

@@ -202,4 +202,8 @@ Sublime.Languages["en"] =
         server_ttt_draw_win         = "How much XP should everyone receive if the game ends in a draw?",
 
     --
+
+    -- Skill settings.
+        skill_settings = "Skill Settings",
+    --
 }

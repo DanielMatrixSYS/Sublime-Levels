@@ -56,6 +56,19 @@ function SQL:CreateTables()
             Sublime.Print("Successfully created sql table: Sublime_Data");
         end
     end
+
+    if (not sql.TableExists("Sublime_Levels_SkillData")) then
+        if (sql.Query([[CREATE TABLE Sublime_Levels_SkillData (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Data TEXT
+        )]]) == false) then
+            Sublime.Print("SQL Error: %s", sql.LastError());
+        else
+            sql.Query(SQL:FormatSQL("INSERT INTO Sublime_Levels_SkillData (Data) VALUES('%s')", util.TableToJSON(Sublime.Skills)));
+            
+            Sublime.Print("Successfully created sql table: Sublime_Levels_SkillData");
+        end
+    end
 end
 
 ---

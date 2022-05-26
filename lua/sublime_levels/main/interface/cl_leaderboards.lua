@@ -81,7 +81,7 @@ function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, ex
             s.MyColorAlpha = math.Approach(s.MyColorAlpha, 200, 2);
 
             if (s.HoverTime < CurTime()) then
-                if (not Sublime.Config.ConfigAccess[LocalPlayer():GetUserGroup()]) then
+                if (not LocalPlayer():IsSuperAdmin()) then
                     Sublime:DrawPanelTip(s, "Click to open profile");
                 else
                     Sublime:DrawPanelTip(s, "[LEFT CLICK] to open profile\n[RIGHT CLICK] to delete user");
@@ -99,11 +99,13 @@ function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, ex
         if (key == MOUSE_LEFT) then
             gui.OpenURL("https://steamcommunity.com/profiles/" .. steamid);
         else
-            local noti = Sublime.MakeNotification("Delete user?", "This will completely wipe the users data and he will be kicked if he is on the server.\nAfter they've connected again they'll have to start from scratch.\n\nThis requires superadmin privileges.", true);
-            noti.DoAcceptClick = function()
-                net.Start("Sublime.DeleteUser")
-                    net.WriteString(steamid);
-                net.SendToServer();
+            if (LocalPlayer():IsSuperAdmin()) then
+                local noti = Sublime.MakeNotification("Delete user?", "This will completely wipe the users data and he will be kicked if he is on the server.\nAfter they've connected again they'll have to start from scratch.\n\nThis requires superadmin privileges.", true);
+                noti.DoAcceptClick = function()
+                    net.Start("Sublime.DeleteUser")
+                        net.WriteString(steamid);
+                    net.SendToServer();
+                end
             end
         end
     end
