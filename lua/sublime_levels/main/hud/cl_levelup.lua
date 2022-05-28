@@ -43,7 +43,7 @@ hook.Add("HUDPaint", path, function()
                 end
             end
 
-            Sublime:DrawTextOutlined(text, font, w / 2, (h / 4) + (30 * (i - 1)) + padding, Color(255, 255, 255, alpha), Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER);
+            Sublime:DrawTextOutlined(text, font, w / 2, (h / 4) + (30 * (i - 1)) + padding, Color(255, 255, 255, alpha), Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, true);
         end
     end
 
@@ -58,10 +58,14 @@ hook.Add("HUDPaint", path, function()
 end);
 
 hook.Add("Sublime.LevelUpNotification", path, function(nLevel)
-    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. ".", shouldDisplay = CurTime(), alpha = 0, font = "Sublime.36", padding = 0});
-    table.insert(texts, {text = "You have reached level: " .. nLevel, shouldDisplay = CurTime() + 2, alpha = 0, font = "Sublime.36", padding = 5});
-    table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = CurTime() + 4, alpha = 0, font = "Sublime.30", padding = 50});
-    table.insert(texts, {text = "Your leaderboards position has changed.", shouldDisplay = CurTime() + 5, alpha = 0, font = "Sublime.30", padding = 50});
+    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. "!", shouldDisplay = CurTime(), alpha = 0, font = "Sublime.36", padding = 0});
+    table.insert(texts, {text = "You have reached level: \n" .. nLevel, shouldDisplay = CurTime() + 2, alpha = 0, font = "Sublime.36", padding = 20});
+    
+    if (Sublime.Settings.Table["SERVER"]["other"]["skills_enabled"]) then
+        table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = CurTime() + 4, alpha = 0, font = "Sublime.30", padding = 50});
+    end
+    
+    //table.insert(texts, {text = "Your leaderboards position has changed.", shouldDisplay = CurTime() + 5, alpha = 0, font = "Sublime.30", padding = 50});
 
     lifetime = CurTime() + 10;
     fadeout = false;

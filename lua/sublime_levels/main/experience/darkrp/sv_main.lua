@@ -15,8 +15,8 @@ hook.Add("lotteryEnded", path, function(_, chosen)
     chosen:SL_AddExperience(experience, "for winning the lottery!");
 end);
 
-hook.Add("onHitCompleted", path, function(hitman)
-    if (not IsValid(hitman)) then
+hook.Add("onHitCompleted", path, function(hitman, target)
+    if (not IsValid(hitman) or not IsValid(target) or hitman == target) then
         return;
     end
 
@@ -24,13 +24,15 @@ hook.Add("onHitCompleted", path, function(hitman)
     hitman:SL_AddExperience(experience, "for completing a hit.");
 end);
 
-hook.Add("playerArrested", path, function(_, _, actor)
-    if (not IsValid(actor)) then
+hook.Add("playerArrested", path, function(criminal, _, actor)
+    if (not IsValid(actor) or not IsValid(criminal) or not criminal:IsPlayer()) then
         return;
     end
 
-    local experience = Sublime.Settings.Get("darkrp", "player_arrested", "number")
-    actor:SL_AddExperience(experience, "for arresting an individual.");
+    if (criminal:isWanted() and not criminal:isCP()) then
+        local experience = Sublime.Settings.Get("darkrp", "player_arrested", "number")
+        actor:SL_AddExperience(experience, "for arresting " .. criminal:Nick());
+    end
 end);
 
 hook.Add("onPaidTax", path, function(ply)

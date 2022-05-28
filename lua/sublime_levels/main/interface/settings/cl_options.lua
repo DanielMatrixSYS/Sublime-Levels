@@ -12,11 +12,6 @@ local panel = {};
 function panel:CreateButtons()
     for i = 1, #self.Buttons do
         local data = self.Buttons[i];
-        local access = data.access;
-
-        if (not access) then
-            continue;
-        end
 
         self.CreatedButtons[i] = self.OptionsHolder:Add("DButton");
         self.CreatedButtons[i]:SetText("");
@@ -92,7 +87,7 @@ function panel:Init()
         {
             name = self.L("client_settings"),
             ui = "Sublime.OptionsClient",
-            color = Sublime.Colors.Purple,
+            color = Sublime.Colors.BlueIsh,
             mat = Sublime.Materials["SL_Settings"],
             access = true,
         },
@@ -100,17 +95,26 @@ function panel:Init()
         {
             name = self.L("server_settings"),
             ui = "Sublime.OptionsServer",
-            color = Sublime.Colors.Pink,
+            color = Sublime.Colors.YellowIsh,
             mat = Sublime.Materials["SL_ServerSettings"],
-            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()];
+            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()],
+        },
+
+        {
+            name = self.L("skill_settings"),
+            ui = "Sublime.OptionsSkills",
+            color = Sublime.Colors.Green,
+            mat = Sublime.Materials["SL_Upgrade"],
+            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()],
+            enabled = false,
         },
 
         {
             name = self.L("reset_database"),
             ui = "Sublime.OptionsServer",
-            color = Sublime.Colors.Pink,
+            color = Sublime.Colors.Black,
             mat = Sublime.Materials["SL_ServerSettings"],
-            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()];
+            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()],
             clickoverride = function()
                 if (not LocalPlayer():IsSuperAdmin()) then
                     Sublime.MakeNotification("Invalid Usergroup", "You need to be a Superadmin in order to use this.");
@@ -126,6 +130,14 @@ function panel:Init()
             end
         },
     }
+
+    for i = #self.Buttons, 1, -1 do
+        local data = self.Buttons[i];
+
+        if (not data.access or data.enabled == false) then
+            table.remove(self.Buttons, i);
+        end
+    end
 
     self.OptionsHolder = self:Add("DPanel");
     self.OptionsHolder.PerformLayout = function(s, w, h)

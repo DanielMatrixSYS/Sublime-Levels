@@ -40,6 +40,8 @@ Sublime.Colors.Yellow   = col(200, 200, 0);
 Sublime.Colors.Purple   = col(114, 0, 255);
 Sublime.Colors.Orange   = col(255, 144, 0);
 Sublime.Colors.Pink     = col(255, 102, 255);
+Sublime.Colors.YellowIsh= col(255, 174, 144);
+Sublime.Colors.BlueIsh  = col(144, 174, 255);
 
 ---
 --- Print
