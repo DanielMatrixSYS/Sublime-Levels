@@ -12,7 +12,7 @@ local experience = 0;
 
 local w, h = ScrW(), ScrH();
 
-local barWidth, barHeight   = w / 2.5, 20;
+local barWidth, barHeight   = w / 2.5, 22;
 local barPosX, barPosY      = (w / 2) - (barWidth / 2), h - (barHeight + 5);
 
 local round         = math.Round;
@@ -57,22 +57,21 @@ hook.Add("HUDPaint", path, function()
     local barColor  = color_func(255 - (percentage * 255), percentage * 255, 0);
     local light     = Sublime:LightenColor(barColor, 20);
     local dark      = Sublime:DarkenColor(barColor, 20);
+    dark = colorAlpha(dark, 75);
+    light = colorAlpha(light, 150);
 
     Sublime:DrawRoundedGradient(nil, 8, barPosX, barPosY, barWidth, barHeight, darkRoyal, color.Royal);
     draw.RoundedBox(8, barPosX + 1, barPosY + 1, barWidth - 2, barHeight - 2, color.Black);
     Sublime:DrawRoundedGradient(nil, 8, barPosX + 1, barPosY + 1, (barWidth - 2) * percentage, barHeight - 2, dark, light);
 
     local str = math.ceil(round(percentage * 100, 1)) .. "%";
-
-    surface.SetFont("Sublime.18");
-    local size = surface.GetTextSize(str);
-    Sublime:DrawTextOutlined(str, "Sublime.18", barPosX + (barWidth / 2) - (size / 2), barPosY + 1, color.White, color.Black, true);
-
     have, needed = comma(have), comma(needed);
-    local size = surface.GetTextSize(have .. "/" .. needed);
+    str = str .. " [" .. have .. "/" .. needed .. "]"
 
-    Sublime:DrawTextOutlined(have .. "/" .. needed, "Sublime.18", barPosX + (barWidth / 2), barPosY - 10, color.White, color.Black, TEXT_ALIGN_CENTER, true);
+    Sublime:DrawTextOutlined(str, "Sublime.18", barPosX + (barWidth / 2), barPosY + 10, color.White, color.Black, TEXT_ALIGN_CENTER, true);
     Sublime:DrawTextOutlined("+" .. comma(gained), "Sublime.18", barPosX + (barWidth / 2), barPosY - 25, colorAlpha(color.Green, alpha), colorAlpha(color.Black, alpha), TEXT_ALIGN_CENTER, true);
+
+    Sublime:DrawTextOutlined(Sublime.L("leaderboards_level") .. ": " .. comma(level) .. "/" .. Sublime.Settings.Table["SERVER"]["other"]["max_level"], "Sublime.18", barPosX + (barWidth / 2), barPosY - 10, color.White, color.Black, TEXT_ALIGN_CENTER, true);
 
     gained = approach(gained, received, 3);
     if (gained > 0) then

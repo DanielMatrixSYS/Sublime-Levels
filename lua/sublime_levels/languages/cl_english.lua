@@ -162,7 +162,7 @@ Sublime.Languages["en"] =
         player_on_kill_experience               = "How much experience should players receive on killing a player? Def.150",
         headshot_modifier                       = "What should the headshot modifier be? Example: 100 * 1.2 = 120. Def. 1.2",
         vip_modifier                            = "How much extra experience should VIP players get? Def. 2",
-        chat_command                            = "Whats hould the chat command for opening the menu be?",
+        chat_command                            = "What should the chat command for opening the menu be?",
         max_level                               = "What should the max level be? Def. 99",
         xp_for_playing_when                     = "How often should players receieve experience just for playing, in seconds? Def. 600",
         xp_for_playing                          = "How much experience should players receive for just playing on the server? Def. 25",

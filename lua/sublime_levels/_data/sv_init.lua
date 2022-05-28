@@ -123,6 +123,9 @@ hook.Add("PlayerInitialSpawn", path, function(ply)
         --- so we have to keep track on our own.
         ---
 
+        -- We do no longer change players run, walk or jump speed, however, earlier versions of
+        -- sublime levels uses these, and customers who are still using those skills will need these variables.
+        
         ply.sublime_default_walk_speed  = ply:GetWalkSpeed();
         ply.sublime_default_run_speed   = ply:GetRunSpeed();
 
