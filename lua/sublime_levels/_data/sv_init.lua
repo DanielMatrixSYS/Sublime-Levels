@@ -1,15 +1,6 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local SQL   = {};
 local path  = Sublime.GetCurrentPath();
 
----
---- CreateTables
----
 function SQL:CreateTables()
     if (not sql.TableExists("Sublime_Levels")) then
         if (sql.Query([[CREATE TABLE Sublime_Levels (
@@ -71,9 +62,6 @@ function SQL:CreateTables()
     end
 end
 
----
---- FormatSQL
----
 function SQL:FormatSQL(formatString, ...)
 	local repacked 	= {};
 	local args		= {...};

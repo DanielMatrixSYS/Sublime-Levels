@@ -1,15 +1,6 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local SQL = Sublime.GetSQL();
 local path = Sublime.GetCurrentPath();
 
----
---- SL_LevelUp
----
 function Sublime.Player:SL_LevelUp(amount)
     local amount    = amount or 1;
     local new       = self:GetNW2Int("sl_level", 1) + amount;
@@ -24,12 +15,6 @@ function Sublime.Player:SL_LevelUp(amount)
     hook.Run("SL.PlayerLeveledUp", self, new, amount)
 end
 
----
---- SL_SetLevel
----
---- A function to hard set a level instead of leveling up.
---- added due to customer demand.
----
 function Sublime.Player:SL_SetLevel(level, give_points)
     if (not level or not isnumber(level)) then
         Sublime.Print("The argument 'level' is either nil or not a number. Its type is '%s'", type(level));

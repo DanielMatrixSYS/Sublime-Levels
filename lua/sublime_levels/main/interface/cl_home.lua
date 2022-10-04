@@ -1,9 +1,3 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local panel     = {};
 local comma     = string.Comma;
 local round     = math.Round;
@@ -43,9 +37,6 @@ function panel:CreateStats()
     --
 end
 
----
---- AddStats
----
 function panel:AddStats(parent, title, description, ...)
     if (not IsValid(parent)) then
         return false;
@@ -73,9 +64,6 @@ function panel:AddStats(parent, title, description, ...)
     end
 end
 
----
---- Init
----
 function panel:Init()
     self.Player     = LocalPlayer();
     self.Experience = 0;
@@ -141,9 +129,6 @@ function panel:Init()
     self:CreateStats();
 end
 
----
---- PerformLayout
----
 function panel:PerformLayout(w, h)
     self.PlayerStats:SetPos(5, 5);
     self.PlayerStats:SetSize((w / 2) - 10, h - 10);
@@ -152,9 +137,6 @@ function panel:PerformLayout(w, h)
     self.GlobalStats:SetSize((w / 2) - 5, h - 10);
 end
 
----
---- Paint
----
 function panel:Paint(w, h)
     surface.SetDrawColor(0, 0, 0, 0);
     surface.DrawRect(0, 0, w, h);

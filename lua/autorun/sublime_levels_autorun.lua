@@ -1,9 +1,3 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 if (Sublime and not Sublime.IsAuthentic) then
     error("Global table 'Sublime' is already in use by another addon, we're not continuing.")
 end
@@ -21,9 +15,6 @@ Sublime.MySQL.DB    = Sublime.MySQL.DB or nil;
 
 Sublime.MySQL.Enabled = false;
 
----
---- LoadFile
----
 function Sublime:LoadFile(path)
     local filename = path:GetFileFromFilename();
     filename = filename ~= "" and filename or path;
@@ -45,9 +36,6 @@ function Sublime:LoadFile(path)
     end
 end
 
----
---- LoadDirectory
----
 function Sublime:LoadDirectory(dir)
     local files, folders = file.Find(dir .. "/*", "LUA");
 

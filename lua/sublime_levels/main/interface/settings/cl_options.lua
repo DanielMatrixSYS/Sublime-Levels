@@ -1,14 +1,5 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local panel = {};
 
----
---- CreateButtons
----
 function panel:CreateButtons()
     for i = 1, #self.Buttons do
         local data = self.Buttons[i];
@@ -70,9 +61,6 @@ function panel:CreateButtons()
     end
 end
 
----
---- Init
----
 function panel:Init()
     self.CreatedButtons = {};
     self.L              = Sublime.L;
@@ -82,7 +70,6 @@ function panel:Init()
     self.CA             = ColorAlpha;
     self.Player         = LocalPlayer(); 
 
-    -- Buttons to create
     self.Buttons = {
         {
             name = self.L("client_settings"),
@@ -165,17 +152,11 @@ function panel:Init()
     end
 end
 
----
---- PerformLayout
----
 function panel:PerformLayout(w, h)
     self.OptionsHolder:SetPos(0, 0);
     self.OptionsHolder:SetSize(150, h);
 end
 
----
---- Think
----
 function panel:Think()
     if (not self.PostInitCalled) then
         self:PostInit();
@@ -184,23 +165,14 @@ function panel:Think()
     end
 end
 
----
---- PostInit
----
 function panel:PostInit()
     self:CreateButtons();
 end
 
----
---- SetWarningMessage
----
 function panel:SetWarningMessage()
     -- deprecated
 end
 
----
---- Paint
----
 function panel:Paint(w, h)
 end
 vgui.Register("Sublime.Options", panel, "EditablePanel");
