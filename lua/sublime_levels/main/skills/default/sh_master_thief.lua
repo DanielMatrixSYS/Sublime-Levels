@@ -32,6 +32,14 @@ if (SERVER and SKILL.Enabled) then
             return;
         end
         
+        local weapon = ply:GetActiveWeapon();
+        
+        if (IsValid(weapon)) then
+            if (weapon.AdminOnly) then
+                return;
+            end
+        end
+
         local points = ply:SL_GetInteger(SKILL.Identifier, 0);
 
         if (points > 0) then
