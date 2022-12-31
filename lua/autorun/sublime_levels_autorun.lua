@@ -13,7 +13,7 @@ Sublime.IsAuthentic = true;
 Sublime.MySQL       = Sublime.MySQL or {};
 Sublime.MySQL.DB    = Sublime.MySQL.DB or nil;
 
-Sublime.MySQL.Enabled = false;
+Sublime.MySQL.Enabled = true;
 
 function Sublime:LoadFile(path)
     local filename = path:GetFileFromFilename();

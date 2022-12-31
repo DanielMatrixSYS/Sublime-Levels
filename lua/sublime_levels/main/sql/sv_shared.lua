@@ -17,14 +17,19 @@ end
 hook.Add("Tick", path, function()
     for i = 1, #queries do
         local data = queries[i];
+        local timeNow = os.time();
 
         if (data) then
             local shouldQuery = data["shouldQuery"];
 
-            if (shouldQuery <= os.time()) then
-                sql.Query(data["query"]);
-                Sublime.Print("Query #" .. data["number"] .. " was processed " .. os.date("%S", os.time() - data["insert_time"]) .. " after it was queued up.");
-                
+            if (shouldQuery <= timeNow) then
+                if (Sublime.MySQL.Enabled) then
+                    Sublime.Print("Doing MySQL query: " .. data["query"]);
+                else
+                    sql.Query(data["query"]);
+                end
+
+                Sublime.Print("Query #" .. data["number"] .. " was processed " .. os.date("%S", timeNow - data["insert_time"]) .. " after it was queued up.");
                 table.remove(queries, i);
             end
         end

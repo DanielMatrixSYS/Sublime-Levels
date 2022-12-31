@@ -1,3 +1,7 @@
+if (Sublime.MySQL.Enabled) then
+    return;
+end
+
 local SQL   = {};
 local path  = Sublime.GetCurrentPath();
 
@@ -73,6 +77,31 @@ function SQL:FormatSQL(formatString, ...)
 	return string.format(formatString, unpack(repacked));
 end
 
+function SQL:InitializePlayerForSQLite(ply)
+    local needed = math.Round(Sublime.Config.BaseExperience * Sublime.Config.ExperienceTimes);
+
+    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], ply:SteamID64(), needed, ply:Nick()));
+    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Skills (SteamID, Points, Points_Spent, Skill_Data) VALUES('%s', '0', '0', '[]')]], ply:SteamID64()));
+        
+    local levelData = sql.Query(SQL:FormatSQL("SELECT Level, Experience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
+    local skillData = sql.Query(SQL:FormatSQL("SELECT Points, Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", ply:SteamID64()));
+
+    local level, experience = levelData[1]["Level"], levelData[1]["Experience"];
+    local points, data = skillData[1]["Points"], skillData[1]["Skill_Data"];
+
+    local to = tonumber;
+    
+    ply:SetNW2Int("sl_level", to(level));
+    ply:SetNW2Int("sl_experience", to(experience));
+    
+    ply:SL_SetInteger("experience", to(experience));
+    ply:SL_SetInteger("ability_points", to(points));
+
+    hook.Run("Sublime.InitializeSkills", ply, util.JSONToTable(data));
+
+    Sublime.Print("%s is level %i with %s experience", ply:Nick(), level, string.Comma(experience));
+end
+
 hook.Add("Initialize", path, function()
     SQL:CreateTables();
 end);
@@ -82,53 +111,10 @@ hook.Add("PlayerInitialSpawn", path, function(ply)
         return;
     end
 
-    local needed = math.Round(Sublime.Config.BaseExperience * Sublime.Config.ExperienceTimes);
-    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], ply:SteamID64(), needed, ply:Nick()));
-    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Skills (SteamID, Points, Points_Spent, Skill_Data) VALUES('%s', '0', '0', '[]')]], ply:SteamID64()));
-
     timer.Simple(2, function()
-        if (not IsValid(ply)) then
-            return;
+        if (IsValid(ply)) then
+            SQL:InitializePlayerForSQLite(ply);
         end
-        
-        local levelData = sql.Query(SQL:FormatSQL("SELECT Level, Experience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
-        local skillData = sql.Query(SQL:FormatSQL("SELECT Points, Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", ply:SteamID64()));
-
-        local level, experience = levelData[1]["Level"], levelData[1]["Experience"];
-        local points, data = skillData[1]["Points"], skillData[1]["Skill_Data"];
-
-        local to = tonumber;
-        
-        ply:SetNW2Int("sl_level", to(level));
-        ply:SetNW2Int("sl_experience", to(experience));
-        
-        ply:SL_SetInteger("experience", to(experience));
-        ply:SL_SetInteger("ability_points", to(points));
-        
-        ---
-        --- We need to have a variable for the player to see what the default run/walk speed is
-        --- the DarkRP gamemode has this a variable on the gamemodes folder, however, not all gamemodes do
-        --- so we have to keep track on our own.
-        ---
-
-        -- We do no longer change players run, walk or jump speed, however, earlier versions of
-        -- sublime levels uses these, and customers who are still using those skills will need these variables.
-        
-        ply.sublime_default_walk_speed  = ply:GetWalkSpeed();
-        ply.sublime_default_run_speed   = ply:GetRunSpeed();
-
-        --- We also have to do this with the jump power.
-        ply.sublime_default_jump_power  = ply:GetJumpPower();
-
-        ---
-        --- Now that the default attributes of the player has been saved, we can continue with the skills.
-        --- this also makes sure, in the long run that when we buy a skill it doesn't use the modified run speed
-        --- but the default one to increase.
-        ---
-
-        hook.Run("Sublime.InitializeSkills", ply, util.JSONToTable(data));
-
-        Sublime.Print("%s is level %i with %s experience", ply:Nick(), level, string.Comma(experience));
     end);
 end);
 

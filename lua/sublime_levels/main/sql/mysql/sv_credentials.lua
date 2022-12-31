@@ -7,7 +7,7 @@ Sublime.MySQL.Credentials = {};
 ---
 --- MySQL IPAddress
 ---
-Sublime.MySQL.Credentials.IPAddress = "localhost";
+Sublime.MySQL.Credentials.IPAddress = "127.0.0.1";
 
 ---
 --- MySQL Username
@@ -17,12 +17,12 @@ Sublime.MySQL.Credentials.Username  = "root";
 ---
 --- MySQL Password
 ---
-Sublime.MySQL.Credentials.Password  = "!yungler123!";
+Sublime.MySQL.Credentials.Password  = "root";
 
 ---
 --- MySQL Database
 ---
-Sublime.MySQL.Credentials.Database  = "sublime_levels_database";
+Sublime.MySQL.Credentials.Database  = "sublime_levels";
 
 ---
 --- MySQL Port
