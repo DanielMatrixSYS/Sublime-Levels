@@ -1,18 +1,9 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local path = Sublime.GetCurrentPath();
 local experience = 0;
 local localplayer;
 local round = math.Round;
 local comma = string.Comma;
 
----
---- For when we gain experience
----
 local gained    = 0
 local received  = 0;
 local alpha     = 0;

@@ -1,9 +1,3 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
 local mat = Material("pp/blurscreen");
 local approach = math.Approach;
 local round, min, floor, clamp = math.Round, math.min, math.floor, math.Clamp;
@@ -34,10 +28,6 @@ function Sublime:DrawPanelBlur(panel, blur)
     end
 end
 
----
---- MakeNotification
----
-
 local ui;
 function Sublime.MakeNotification(header, desc, useDecline, useText)
     useDecline = useDecline or false;
@@ -59,9 +49,6 @@ function Sublime.MakeNotification(header, desc, useDecline, useText)
     return ui;
 end
 
---[[---------------------------------------------------------------------------
-Wrap strings to not become wider than the given amount of pixels
----------------------------------------------------------------------------]]
 local function charWrap(text, pxWidth)
     local total = 0
 

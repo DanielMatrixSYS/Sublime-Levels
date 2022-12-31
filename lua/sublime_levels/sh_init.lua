@@ -1,17 +1,5 @@
---[[------------------------------------------------------------------------------
- *  Copyright (C) Fluffy(76561197976769128 - STEAM_0:0:8251700) - All Rights Reserved
- *  Unauthorized copying of this file, via any medium is strictly prohibited
- *  Proprietary and confidential
---]]------------------------------------------------------------------------------
-
----
---- Metatables
----
 Sublime.Player = FindMetaTable("Player");
 
----
---- GetCurrentPath
----
 function Sublime.GetCurrentPath()
     return debug.getinfo(2).short_src;
 end
@@ -20,9 +8,6 @@ function Sublime.GetCurrentGamemode()
     return engine.ActiveGamemode()
 end
 
----
---- Colors
----
 Sublime.Colors = {};
 
 local col               = Color;
@@ -43,9 +28,6 @@ Sublime.Colors.Pink     = col(255, 102, 255);
 Sublime.Colors.YellowIsh= col(255, 174, 144);
 Sublime.Colors.BlueIsh  = col(144, 174, 255);
 
----
---- Print
----
 function Sublime.Print(s, ...)
     if (SERVER) then
         if (not Sublime.Settings.Get("other", "debug_enabled", "boolean")) then
