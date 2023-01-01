@@ -1,7 +1,5 @@
 util.AddNetworkString("Sublime.ExperienceNotification");
 
-local SQL = Sublime.GetSQL();
-
 function Sublime.Player:SL_AddExperience(amount, source, notify, shouldMultiply, force)
     local amount = (amount or 50);
 
@@ -52,11 +50,11 @@ function Sublime.Player:SL_AddExperience(amount, source, notify, shouldMultiply,
         self:SetNW2Int("sl_experience", new);
     end
     
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '%s' WHERE SteamID = '%s'", new, self:SteamID64()));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '%s' WHERE SteamID = '%s'", new, self:SteamID64()));
 
     if (shouldMultiply) then
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET TotalExperience = TotalExperience + '%s' WHERE SteamID = '%s'", amount, self:SteamID64()));
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Data SET ExperienceGained = ExperienceGained + '%s'", amount));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET TotalExperience = TotalExperience + '%s' WHERE SteamID = '%s'", amount, self:SteamID64()));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Data SET ExperienceGained = ExperienceGained + '%s'", amount));
     end
 
     if (not source or source == "") then

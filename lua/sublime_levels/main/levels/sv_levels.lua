@@ -1,4 +1,3 @@
-local SQL = Sublime.GetSQL();
 local path = Sublime.GetCurrentPath();
 
 function Sublime.Player:SL_LevelUp(amount)
@@ -9,7 +8,7 @@ function Sublime.Player:SL_LevelUp(amount)
     self:SetNW2Int("sl_level", new);
     self:SetNW2Int("sl_experience", 0);
     
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", new, self:SL_GetNeededExperience(), self:SteamID64()));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", new, self:SL_GetNeededExperience(), self:SteamID64()));
     Sublime.Query("UPDATE Sublime_Data SET LevelsGained = LevelsGained + " .. amount);
 
     hook.Run("SL.PlayerLeveledUp", self, new, amount)
@@ -32,7 +31,7 @@ function Sublime.Player:SL_SetLevel(level, give_points)
     self:SetNW2Int("sl_level", level);
     self:SetNW2Int("sl_experience", 0);
 
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", level, self:SL_GetNeededExperience(), self:SteamID64()));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", level, self:SL_GetNeededExperience(), self:SteamID64()));
 
     -- Should the player receive ability points after we set his level?
     -- This is sometimes useful, but I would not recommend it.
