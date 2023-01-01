@@ -3,7 +3,6 @@ util.AddNetworkString("Sublime.Interface");
 util.AddNetworkString("Sublime.RequestInterface");
 util.AddNetworkString("Sublime.PlayerReceivedExperience");
 
-local SQL   = Sublime.GetSQL();
 local path  = Sublime.GetCurrentPath();
 
 local to = tonumber;
@@ -15,7 +14,7 @@ hook.Add("PlayerDisconnected", path, function(ply)
 end);
 
 local function openSublimeMenu(ply)
-    local total_xp    = sql.QueryValue(SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
+    local total_xp    = sql.QueryValue(Sublime.SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
     local global_data = sql.Query("SELECT ExperienceGained, LevelsGained FROM Sublime_Data");
 
     net.Start("Sublime.Interface");

@@ -78,13 +78,15 @@ function SQL:FormatSQL(formatString, ...)
 end
 
 function SQL:InitializePlayerForSQLite(ply)
-    local needed = math.Round(Sublime.Config.BaseExperience * Sublime.Config.ExperienceTimes);
+    local needed    = math.Round(Sublime.Config.BaseExperience * Sublime.Config.ExperienceTimes);
+    local steamid   = ply:SteamID64();
+    local name      = ply:Nick();
 
-    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], ply:SteamID64(), needed, ply:Nick()));
-    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Skills (SteamID, Points, Points_Spent, Skill_Data) VALUES('%s', '0', '0', '[]')]], ply:SteamID64()));
+    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], steamid, needed, name));
+    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Skills (SteamID, Points, Points_Spent, Skill_Data) VALUES('%s', '0', '0', '[]')]], steamid));
         
-    local levelData = sql.Query(SQL:FormatSQL("SELECT Level, Experience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
-    local skillData = sql.Query(SQL:FormatSQL("SELECT Points, Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", ply:SteamID64()));
+    local levelData = sql.Query(SQL:FormatSQL("SELECT Level, Experience FROM Sublime_Levels WHERE SteamID = '%s'", steamid));
+    local skillData = sql.Query(SQL:FormatSQL("SELECT Points, Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
 
     local level, experience = levelData[1]["Level"], levelData[1]["Experience"];
     local points, data = skillData[1]["Points"], skillData[1]["Skill_Data"];
@@ -99,7 +101,7 @@ function SQL:InitializePlayerForSQLite(ply)
 
     hook.Run("Sublime.InitializeSkills", ply, util.JSONToTable(data));
 
-    Sublime.Print("%s is level %i with %s experience", ply:Nick(), level, string.Comma(experience));
+    Sublime.Print("%s is level %i with %s experience", name, level, string.Comma(experience));
 end
 
 hook.Add("Initialize", path, function()
@@ -118,9 +120,6 @@ hook.Add("PlayerInitialSpawn", path, function(ply)
     end);
 end);
 
----
---- GetSQL
----
 function Sublime.GetSQL()
     return SQL;
 end

@@ -1,5 +1,4 @@
 local path  = Sublime.GetCurrentPath();
-local SQL   = Sublime.GetSQL();
 
 util.AddNetworkString("Sublime.UpgradeSkillNotify");
 util.AddNetworkString("Sublime.UpgradeSkill");
@@ -20,7 +19,7 @@ function Sublime.Player:SL_AddSkillPoint(amount)
     local new = self:SL_GetInteger("ability_points", 0) + amount;
     self:SL_SetInteger("ability_points", new);
 
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", new, self:SteamID64()));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", new, self:SteamID64()));
 
     Sublime.Print("%s has now %i skill points to use.", self:Nick(), new);
     hook.Run("SL.PlayerReceivedSkillPoint", self, amount, new);
@@ -49,7 +48,7 @@ net.Receive("Sublime.UpgradeSkill", function(_, ply)
         ply:SL_SetInteger(skill, ply:SL_GetInteger(skill, 0) + 1);
         ply:SL_SetInteger("ability_points", ply:SL_GetAbilityPoints() - 1);
 
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", ply:SL_GetAbilityPoints(), steamid));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", ply:SL_GetAbilityPoints(), steamid));
 
         ---
         --- Call necessary functions
@@ -64,12 +63,12 @@ net.Receive("Sublime.UpgradeSkill", function(_, ply)
         --- Update data
         ---
 
-        local data = sql.Query(SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
+        local data = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
         local tbl = util.JSONToTable(data[1]["Skill_Data"]);
 
         tbl[skill] = (tbl[skill] and tbl[skill] + 1) or 1;
 
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
     
         net.Start("Sublime.UpgradeSkillNotify")
             net.WriteString(skillTable.Name);
@@ -94,7 +93,7 @@ net.Receive("Sublime.ResetSkills", function(_, ply)
     ---
     --- Reset the skill data.
     ---
-    local data  = sql.Query(SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
+    local data  = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
     local tbl   = util.JSONToTable(data[1]["Skill_Data"]) or {};
 
     for k, v in pairs(tbl) do
@@ -107,7 +106,7 @@ net.Receive("Sublime.ResetSkills", function(_, ply)
         end
     end
 
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
 
     ---
     --- Give back the points
@@ -115,7 +114,7 @@ net.Receive("Sublime.ResetSkills", function(_, ply)
     local plyShouldReceive = ply:SL_GetLevel() - 1;
     ply:SL_SetInteger("ability_points", plyShouldReceive);
 
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", plyShouldReceive, steamid));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", plyShouldReceive, steamid));
 end);
 
 hook.Add("Sublime.InitializeSkills", path, function(ply, data)

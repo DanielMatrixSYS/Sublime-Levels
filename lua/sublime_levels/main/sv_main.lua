@@ -6,8 +6,6 @@ util.AddNetworkString("Sublime.AdminAdjustData");
 util.AddNetworkString("Sublime.ResetDatabase");
 util.AddNetworkString("Sublime.DeleteUser");
 
-local SQL = Sublime.GetSQL();
-
 ---
 --- SL_Save
 ---
@@ -17,8 +15,8 @@ function Sublime.Player:SL_Save()
     local ability_points    = self:SL_GetInteger("ability_points", 0);
     local steamid           = self:SteamID64(); 
 
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '%s' WHERE SteamID = '%s'", level, experience, steamid));
-    Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", ability_points, steamid));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '%s' WHERE SteamID = '%s'", level, experience, steamid));
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", ability_points, steamid));
 
     Sublime.Print("Saved %s's stats.", self:Nick());
 end
@@ -34,6 +32,7 @@ net.Receive("Sublime.GetLeaderboardsData", function(_, ply)
     local offset        = 12 * (cPage - 1);
     local players       = {};
     local storedData    = {};
+    
     local myData;
     
     local totalRows = sql.QueryValue("SELECT COUNT(*) FROM Sublime_Levels");
@@ -156,7 +155,7 @@ net.Receive("Sublime.AdminAdjustData", function(_, ply)
         target:SetNW2Int("sl_level", after);
         target:SetNW2Int("sl_experience", 0);
 
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", after, target:SL_GetNeededExperience(), target:SteamID64()));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", after, target:SL_GetNeededExperience(), target:SteamID64()));
 
         Sublime.Print("%s has taken %i levels from %s.", ply:Nick(), value, target:Nick());
 
@@ -179,7 +178,7 @@ net.Receive("Sublime.AdminAdjustData", function(_, ply)
 
         target:SL_SetInteger("ability_points", after);
 
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", after, target:SteamID64()));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", after, target:SteamID64()));
 
         Sublime.Print("%s has now %i skill points to use.", target:Nick(), after);
 
@@ -196,7 +195,7 @@ net.Receive("Sublime.AdminAdjustData", function(_, ply)
         target:SL_SetInteger("experience", 0);
         target:SetNW2Int("sl_experience", 0);
 
-        Sublime.Query(SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0' WHERE SteamID = '%s'", target:SteamID64()));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0' WHERE SteamID = '%s'", target:SteamID64()));
         Sublime.Print("%s has reset %s's experience.", ply:Nick(), target:Nick());
 
         return;
@@ -329,7 +328,7 @@ concommand.Add("sublimelevels_fill_leaderboards", function(ply, cmd, args)
                 foundName ~= "testing" and not foundName:find("is an online tool")) then
                     Sublime.Print("Name found: " .. foundName);
 
-                    sql.Query(SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], steamid, 1575, foundName));
+                    sql.Query(Sublime.SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], steamid, 1575, foundName));
                 end
             end,
 

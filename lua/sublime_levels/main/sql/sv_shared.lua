@@ -11,7 +11,7 @@ function Sublime.Query(query)
         number = #queries + 1
     });
     
-    Sublime.Print("Query #" .. #queries .. " was queued up at " .. time);
+    Sublime.Print("Query #" .. #queries .. " was queued up at " .. os.date("%H:%M:%S", time));
 end
 
 hook.Add("Tick", path, function()
@@ -24,12 +24,24 @@ hook.Add("Tick", path, function()
 
             if (shouldQuery <= timeNow) then
                 if (Sublime.MySQL.Enabled) then
-                    Sublime.Print("Doing MySQL query: " .. data["query"]);
+                    local query = Sublime.MySQL.DB:query(data["query"]);
+
+                    function query:onSuccess()
+                        if (query:affectedRows() > 0) then
+                            Sublime.Print("Query #" .. data["number"] .. " was processed " .. string.NiceTime(timeNow - data["insert_time"]) .. " after it was queued up.");
+                        end
+                    end
+
+                    function query:onError(err)
+                        print("Error on query[" .. data["query"] .. "]: " .. err);
+                    end
+
+                    query:start();
                 else
                     sql.Query(data["query"]);
+                    Sublime.Print("Query #" .. data["number"] .. " was processed " .. os.date("%S", timeNow - data["insert_time"]) .. " after it was queued up.");
                 end
 
-                Sublime.Print("Query #" .. data["number"] .. " was processed " .. os.date("%S", timeNow - data["insert_time"]) .. " after it was queued up.");
                 table.remove(queries, i);
             end
         end
