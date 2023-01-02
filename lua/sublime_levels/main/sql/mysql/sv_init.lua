@@ -1,4 +1,9 @@
+if (not Sublime.MySQL.Enabled) then
+    return;
+end
+
 local SQL = {};
+local verifiedTables = false;
 local path = Sublime.GetCurrentPath();
 
 function SQL:InsertPlayer(ply)
@@ -49,31 +54,48 @@ function SQL:InsertPlayerSkills(ply)
     prep:start();
 end
 
-function SQL:Query(query, callback)
-    local statement = query[1];
-    local lookup = query[2];
+function SQL:Query(toProcess, callback)
+    local statement = toProcess[1];
+    local lookup = toProcess[2];
+    callback = callback or function() return; end
 
-    local prep = Sublime.MySQL.DB:prepare(statement);
+    if (not lookup) then
+        statement = Sublime.MySQL.DB:escape(statement);
+        
+        local query = Sublime.MySQL.DB:query(statement);
 
-    function prep:onSuccess(data)
-        callback(data);
-    end
+        function query:onSuccess(data)
+            callback(data)
+        end
 
-    function prep:onError(err)
-        print("Error in [Select] on query [" .. query .. "]: " .. err);
-    end
+        function query:onError(err)
+            print("Error in [Select] on query [" .. statement .. "]: " .. err)
+        end
 
-    if (isstring(lookup)) then
-        prep:setString(1, lookup);
-    elseif (isnumber(lookup)) then
-        prep:setNumber(1, lookup);
-    elseif (isbool(lookup)) then
-        prep:setBoolean(1, lookup);
+        query:start();
     else
-        prep:setNull(1, lookup);
-    end
+        local prep = Sublime.MySQL.DB:prepare(statement);
 
-    prep:start();
+        function prep:onSuccess(data)
+            callback(data);
+        end
+
+        function prep:onError(err)
+            print("Error in [Select] on query [" .. statement .. "]: " .. err);
+        end
+
+        if (isstring(lookup)) then
+            prep:setString(1, lookup);
+        elseif (isnumber(lookup)) then
+            prep:setNumber(1, lookup);
+        elseif (isbool(lookup)) then
+            prep:setBoolean(1, lookup);
+        else
+            prep:setNull(1, lookup);
+        end
+
+        prep:start();
+    end
 end
 
 function SQL:InitializePlayerFromMySQL(ply)
@@ -106,10 +128,35 @@ hook.Add("PlayerInitialSpawn", path, function(ply)
     end
 
     timer.Simple(2, function()
-        if (IsValid(ply)) then
+        if (IsValid(ply) and not Sublime.MySQL.ImportStarted) then
             SQL:InitializePlayerFromMySQL(ply);
         end
     end);
+end);
+
+hook.Add("Sublime.MySQL.Initialize", path, function()
+    if (not verifiedTables and not Sublime.MySQL.ImportStarted) then
+        SQL:Query({"SELECT ExperienceGained, LevelsGained FROM Sublime_Data"}, function(data)
+            if (not data or #data <= 0) then
+                SQL:Query({"INSERT INTO Sublime_Data (ExperienceGained, LevelsGained) VALUES(0, 1)"}, function(data)
+                    Sublime.Print("Verified table [Sublime_Data]");
+
+                    hook.Run("Sublime.MySQL.Initialized");
+                end);
+            else
+                hook.Run("Sublime.MySQL.Initialized");
+            end
+
+            verifiedTables = true;
+            Sublime.Print("Verified all mysql tables.");
+        end);
+    end
+end);
+
+hook.Add("Sublime.MySQL.Initialized", path, function()
+    if (Sublime.MySQL.ShouldStopThinking) then
+        RunConsoleCommand("sv_hibernate_think", "0");
+    end
 end);
 
 function SQL:FormatSQL(formatString, ...)

@@ -63,12 +63,22 @@ net.Receive("Sublime.UpgradeSkill", function(_, ply)
         --- Update data
         ---
 
-        local data = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
-        local tbl = util.JSONToTable(data[1]["Skill_Data"]);
+        if (Sublime.MySQL.Enabled) then
+            Sublime.GetSQL():Query({"SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = ?", steamid}, function(data)
+                local tbl = util.JSONToTable(data[1].Skill_Data);
 
-        tbl[skill] = (tbl[skill] and tbl[skill] + 1) or 1;
+                tbl[skill] = (tbl[skill] and tbl[skill] + 1) or 1;
 
-        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+                Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+            end);
+        else
+            local data = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
+            local tbl = util.JSONToTable(data[1]["Skill_Data"]);
+    
+            tbl[skill] = (tbl[skill] and tbl[skill] + 1) or 1;
+    
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+        end
     
         net.Start("Sublime.UpgradeSkillNotify")
             net.WriteString(skillTable.Name);
@@ -93,20 +103,42 @@ net.Receive("Sublime.ResetSkills", function(_, ply)
     ---
     --- Reset the skill data.
     ---
-    local data  = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
-    local tbl   = util.JSONToTable(data[1]["Skill_Data"]) or {};
+    if (Sublime.MySQL.Enabled) then
+        Sublime.GetSQL():Query({"SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = ?", steamid}, function(data)
+            if (not IsValid(ply)) then
+                return;
+            end
 
-    for k, v in pairs(tbl) do
-        tbl[k] = 0;
-        ply:SL_SetInteger(k, 0);
+            local tbl = util.JSONToTable(data[1].Skill_Data);
 
-        local skillTable = Sublime.GetSkill(k);
-        if (skillTable and skillTable.OnBuy) then
-            skillTable.OnBuy(ply);
+            for k, v in pairs(tbl) do
+                tbl[k] = 0;
+                ply:SL_SetInteger(k, 0);
+        
+                local skillTable = Sublime.GetSkill(k);
+                if (skillTable and skillTable.OnBuy) then
+                    skillTable.OnBuy(ply);
+                end
+            end
+
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+        end);
+    else
+        local data  = sql.Query(Sublime.SQL:FormatSQL("SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = '%s'", steamid));
+        local tbl   = util.JSONToTable(data[1]["Skill_Data"]) or {};
+
+        for k, v in pairs(tbl) do
+            tbl[k] = 0;
+            ply:SL_SetInteger(k, 0);
+    
+            local skillTable = Sublime.GetSkill(k);
+            if (skillTable and skillTable.OnBuy) then
+                skillTable.OnBuy(ply);
+            end
         end
-    end
 
-    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Skill_Data = '%s' WHERE SteamID = '%s'", util.TableToJSON(tbl), steamid));
+    end
 
     ---
     --- Give back the points

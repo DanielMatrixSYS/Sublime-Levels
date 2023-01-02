@@ -97,6 +97,14 @@ function panel:Init()
         },
 
         {
+            name = self.L("database_name"),
+            ui = "Sublime.DatabaseSettings",
+            color = Sublime.Colors.Orange,
+            mat = Sublime.Materials["SL_Upgrade"],
+            access = Sublime.Config.ConfigAccess[self.Player:GetUserGroup()],
+        },
+
+        {
             name = self.L("reset_database"),
             ui = "Sublime.OptionsServer",
             color = Sublime.Colors.Black,

@@ -7,14 +7,6 @@ Sublime.Languages   = Sublime.Languages or {};
 Sublime.Skills      = Sublime.Skills or {};
 Sublime.IsAuthentic = true;
 
----
---- MySQL stuff, do not use this yet.
----
-Sublime.MySQL       = Sublime.MySQL or {};
-Sublime.MySQL.DB    = Sublime.MySQL.DB or nil;
-
-Sublime.MySQL.Enabled = true;
-
 function Sublime:LoadFile(path)
     local filename = path:GetFileFromFilename();
     filename = filename ~= "" and filename or path;
