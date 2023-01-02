@@ -86,11 +86,19 @@ net.Receive("Sublime.ExportToMySQL", function(_, ply)
     function prep2:onSuccess()
         local sublime_skills = sql.Query("SELECT * FROM Sublime_Skills");
 
+        local last = #sublime_skills;
+
         for i = 1, #sublime_skills do
             local data = sublime_skills[i];
     
             if (data) then
                 local prep4 = Sublime.MySQL.DB:prepare("INSERT IGNORE INTO Sublime_Skills (SteamID, Points, Points_Spent, Skill_Data) VALUES(?, ?, ?, ?)");
+
+                if (i == last) then
+                    function prep4:onSuccess(data)
+                        RunConsoleCommand("changelevel", game.GetMap());
+                    end
+                end
 
                 prep4:setString(1, data.SteamID);
                 prep4:setNumber(2, to(data.Points));
