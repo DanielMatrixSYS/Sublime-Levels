@@ -102,7 +102,7 @@ Sublime.Languages["en"] =
     --
 
     -- Client Settings
-        client_settings     = "Client Settings",
+        client_settings     = "Client",
         client_saved        = "Saved Client Settings",
         client_save         = "Save Client Settings",
         client_default      = "Reset Client Settings",
@@ -128,7 +128,7 @@ Sublime.Languages["en"] =
     --
 
     -- Server Settings
-        server_settings                     = "Server Settings",
+        server_settings                     = "Server",
         server_save                         = "Save Server Settings",
         server_default                      = "Reset Server Settings",
         server_access_denied                = "SERVER SIDE ACCESS DENIED",
@@ -197,7 +197,12 @@ Sublime.Languages["en"] =
 
     --
 
+    -- Database settings.
+    database_name = "Database",
+
+    --
+
     -- Skill settings.
-        skill_settings = "Skill Settings",
+        skill_settings = "Skills",
     --
 }

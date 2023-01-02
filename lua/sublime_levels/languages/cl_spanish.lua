@@ -199,6 +199,12 @@ Sublime.Languages["es"] =
 
     --
 
+    -- Database settings.
+    database_name = "Database",
+
+    --
+    
+
     -- Skill settings.
         skill_settings = "Configuraciones de habilidades",
     --

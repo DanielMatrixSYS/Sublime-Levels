@@ -4,6 +4,10 @@ local path      = Sublime.GetCurrentPath();
 function Sublime.Query(query)
     local time = os.time();
 
+    if (Sublime.MySQL.ImportStarted) then
+        return true;
+    end
+
     table.insert(queries, {
         query = query, 
         insert_time = time, 

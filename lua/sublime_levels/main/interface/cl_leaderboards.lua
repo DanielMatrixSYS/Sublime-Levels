@@ -99,6 +99,8 @@ function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, ex
                     net.Start("Sublime.DeleteUser")
                         net.WriteString(steamid);
                     net.SendToServer();
+                
+                    panelRefrence:Remove();
                 end
             end
         end

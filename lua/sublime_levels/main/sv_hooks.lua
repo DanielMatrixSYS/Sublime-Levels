@@ -14,14 +14,30 @@ hook.Add("PlayerDisconnected", path, function(ply)
 end);
 
 local function openSublimeMenu(ply)
-    local total_xp    = sql.QueryValue(Sublime.SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
-    local global_data = sql.Query("SELECT ExperienceGained, LevelsGained FROM Sublime_Data");
+    local total_xp = 0;
 
-    net.Start("Sublime.Interface");
-        net.WriteUInt(to(total_xp), 32);
-        net.WriteUInt(to(global_data[1]["ExperienceGained"]), 32);
-        net.WriteUInt(to(global_data[1]["LevelsGained"]), 32);
-    net.Send(ply);
+    if (not Sublime.MySQL.Enabled) then
+        total_xp = sql.QueryValue(Sublime.SQL:FormatSQL("SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = '%s'", ply:SteamID64()));
+        local global_data = sql.Query("SELECT ExperienceGained, LevelsGained FROM Sublime_Data");
+
+        net.Start("Sublime.Interface");
+            net.WriteUInt(to(total_xp), 32);
+            net.WriteUInt(to(global_data[1]["ExperienceGained"]), 32);
+            net.WriteUInt(to(global_data[1]["LevelsGained"]), 32);
+        net.Send(ply);
+    else
+        Sublime.GetSQL():Query({"SELECT TotalExperience FROM Sublime_Levels WHERE SteamID = ?", ply:SteamID64()}, function(data)
+            total_xp = data[1].TotalExperience;
+        end);
+
+        Sublime.GetSQL():Query({"SELECT ExperienceGained, LevelsGained FROM Sublime_Data WHERE ID = 1"}, function(data)
+            net.Start("Sublime.Interface");
+                net.WriteUInt(to(total_xp), 32);
+                net.WriteUInt(to(data[1].ExperienceGained), 32);
+                net.WriteUInt(to(data[1].LevelsGained), 32);
+            net.Send(ply);
+        end);
+    end
 end
 
 hook.Add("PlayerSay", path, function(ply, text)

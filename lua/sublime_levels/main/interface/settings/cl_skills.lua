@@ -158,11 +158,6 @@ function panel:CreateCategory(category, data)
         Sublime:DrawRoundedGradient(panel, 8, 1, 1, w - 2, h - 2, Sublime.Colors.Green, Sublime:DarkenColor(Sublime.Colors.Green, 50))
     end,
 
-    //DoClick
-    function()
-        print("clicked");
-    end);
-
     return cat;
 end
 

@@ -34,72 +34,150 @@ net.Receive("Sublime.GetLeaderboardsData", function(_, ply)
     local storedData    = {};
     
     local myData;
+    local retrievedData;
+    local totalRows;
+
+    if (Sublime.MySQL.Enabled) then
+        local SQL = Sublime.GetSQL();
+
+        SQL:Query({"SELECT COUNT(*) AS count FROM Sublime_Levels"}, function(data)
+            totalRows = data[1].count;
+        end);
+
+        if (not HasOwnData) then
+            SQL:Query({"SELECT SteamID, Level, Experience, TotalExperience, NeededExperience, Name, ROW_NUMBER() OVER (ORDER BY TotalExperience DESC) AS Position FROM Sublime_Levels"}, function(data)
+                myData = data;
+            end);
+        end
+
+        SQL:Query({"SELECT SteamID, Level, Experience, TotalExperience, NeededExperience, Name, ROW_NUMBER() OVER (ORDER BY TotalExperience DESC) As Position FROM Sublime_Levels LIMIT " .. offset .. ", " .. limit}, function(data)
+            retrievedData = data;
+
+            if (myData ~= nil) then
+                for i = 1, #myData do
+                    local data = myData[i];
+        
+                    if (data.SteamID == ply:SteamID64()) then
+                        table.insert(storedData, {
+                            position    = data.Position,
+                            steamid     = data.SteamID,
+                            level       = data.Level,
+                            experience  = data.Experience,
+                            total_xp    = data.TotalExperience,
+                            needed_xp   = data.NeededExperience,
+                            name        = data.Name
+                        });
+        
+                        break;
+                    end
+                end
+            end
+        
+            for i = 1, limit do
+                local pData = retrievedData[i];
+        
+                if (pData) then
+                    table.insert(players, {
+                        position    = pData.Position,
+                        steamid     = pData.SteamID,
+                        level       = pData.Level,
+                        experience  = pData.Experience,
+                        total_xp    = pData.TotalExperience,
+                        needed_xp   = pData.NeededExperience,
+                        name        = pData.Name
+                    });
+                end
+            end
+
+            if (IsValid(ply)) then
+                net.Start("Sublime.SendLeaderboardsData");
+                    net.WriteTable(storedData or {});
+                    net.WriteUInt(#players, 32);
+                    net.WriteUInt(math.ceil(totalRows / 12), 32);
+
+                    for i = 1, #players do
+                        local data = players[i];
+
+                        if (data) then
+                            net.WriteUInt(data.position, 32);
+                            net.WriteString(data.steamid);
+                            net.WriteUInt(data.level, 8);
+                            net.WriteUInt(data.experience, 32);
+                            net.WriteUInt(data.total_xp, 32);
+                            net.WriteUInt(data.needed_xp, 32);
+                            net.WriteString(data.name);
+                        end
+                    end
+                net.Send(ply);
+            end
+        end);
+    else
+        totalRows = sql.QueryValue("SELECT COUNT(*) FROM Sublime_Levels");
     
-    local totalRows = sql.QueryValue("SELECT COUNT(*) FROM Sublime_Levels");
+        if (not HasOwnData) then
+            myData = sql.Query([[SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY TotalExperience DESC) Position, SteamID, Level, Experience, TotalExperience, NeededExperience, Name FROM Sublime_Levels)]]);
+        end
     
-    if (not HasOwnData) then
-        myData = sql.Query([[SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY TotalExperience DESC) Position, SteamID, Level, Experience, TotalExperience, NeededExperience, Name FROM Sublime_Levels)]]);
-    end
-
-    local data = sql.Query([[SELECT * FROM (SELECT ROW_NUMBER () OVER (ORDER BY TotalExperience DESC)
-                                Position, SteamID, Level, Experience, TotalExperience, NeededExperience, Name FROM Sublime_Levels 
-                                LIMIT ]] .. limit .. " OFFSET " .. offset .. ")");
-
-    if (myData ~= nil) then
-        for i = 1, #myData do
-            local data = myData[i];
-
-            if (data.SteamID == ply:SteamID64()) then
-                table.insert(storedData, {
-                    position    = data.Position,
-                    steamid     = data.SteamID,
-                    level       = data.Level,
-                    experience  = data.Experience,
-                    total_xp    = data.TotalExperience,
-                    needed_xp   = data.NeededExperience,
-                    name        = data.Name
-                })
-
-                break;
+        retrievedData = sql.Query([[SELECT * FROM (SELECT ROW_NUMBER () OVER (ORDER BY TotalExperience DESC)
+                                    Position, SteamID, Level, Experience, TotalExperience, NeededExperience, Name FROM Sublime_Levels 
+                                    LIMIT ]] .. limit .. " OFFSET " .. offset .. ")");
+    
+        if (myData ~= nil) then
+            for i = 1, #myData do
+                local retrievedData = myData[i];
+    
+                if (retrievedData.SteamID == ply:SteamID64()) then
+                    table.insert(storedData, {
+                        position    = retrievedData.Position,
+                        steamid     = retrievedData.SteamID,
+                        level       = retrievedData.Level,
+                        experience  = retrievedData.Experience,
+                        total_xp    = retrievedData.TotalExperience,
+                        needed_xp   = retrievedData.NeededExperience,
+                        name        = retrievedData.Name
+                    })
+    
+                    break;
+                end
             end
         end
-    end
-
-    for i = 1, limit do
-        local pData = data[i];
-
-        if (pData) then
-            table.insert(players, {
-                position    = pData.Position,
-                steamid     = pData.SteamID,
-                level       = pData.Level,
-                experience  = pData.Experience,
-                total_xp    = pData.TotalExperience,
-                needed_xp   = pData.NeededExperience,
-                name        = pData.Name
-            });
-        end
-    end
-
-    net.Start("Sublime.SendLeaderboardsData");
-        net.WriteTable(storedData or {});
-        net.WriteUInt(#players, 32);
-        net.WriteUInt(math.ceil(totalRows / 12), 32);
-
-        for i = 1, #players do
-            local data = players[i];
-
-            if (data) then
-                net.WriteUInt(data.position, 32);
-                net.WriteString(data.steamid);
-                net.WriteUInt(data.level, 8);
-                net.WriteUInt(data.experience, 32);
-                net.WriteUInt(data.total_xp, 32);
-                net.WriteUInt(data.needed_xp, 32);
-                net.WriteString(data.name);
+    
+        for i = 1, limit do
+            local pData = retrievedData[i];
+    
+            if (pData) then
+                table.insert(players, {
+                    position    = pData.Position,
+                    steamid     = pData.SteamID,
+                    level       = pData.Level,
+                    experience  = pData.Experience,
+                    total_xp    = pData.TotalExperience,
+                    needed_xp   = pData.NeededExperience,
+                    name        = pData.Name
+                });
             end
         end
-    net.Send(ply);
+    
+        net.Start("Sublime.SendLeaderboardsData");
+            net.WriteTable(storedData or {});
+            net.WriteUInt(#players, 32);
+            net.WriteUInt(math.ceil(totalRows / 12), 32);
+
+            for i = 1, #players do
+                local data = players[i];
+
+                if (data) then
+                    net.WriteUInt(data.position, 32);
+                    net.WriteString(data.steamid);
+                    net.WriteUInt(data.level, 8);
+                    net.WriteUInt(data.experience, 32);
+                    net.WriteUInt(data.total_xp, 32);
+                    net.WriteUInt(data.needed_xp, 32);
+                    net.WriteString(data.name);
+                end
+            end
+        net.Send(ply);
+    end
     
     ply.SublimeLeaderboardsDataCooldown = CurTime() + 1;
 end);
@@ -207,11 +285,21 @@ net.Receive("Sublime.ResetDatabase", function(_, ply)
         return;
     end
 
-    sql.Query("DROP TABLE Sublime_Levels");
-    sql.Query("DROP TABLE Sublime_Skills");
-    sql.Query("DROP TABLE Sublime_Data");
+    if (Sublime.MySQL.Enabled) then
+        local SQL = Sublime.GetSQL();
 
-    RunConsoleCommand("changelevel", game.GetMap());
+        SQL:Query({"DROP TABLE Sublime_Levels"});
+        SQL:Query({"DROP TABLE Sublime_Skills"});
+        SQL:Query({"DROP TABLE Sublime_Data"}, function()
+            RunConsoleCommand("changelevel", game.GetMap());
+        end);
+    else
+        sql.Query("DROP TABLE Sublime_Levels");
+        sql.Query("DROP TABLE Sublime_Skills");
+        sql.Query("DROP TABLE Sublime_Data");
+
+        RunConsoleCommand("changelevel", game.GetMap());
+    end
 end);
 
 net.Receive("Sublime.DeleteUser", function(_, ply)
@@ -221,8 +309,15 @@ net.Receive("Sublime.DeleteUser", function(_, ply)
 
     local steamid = net.ReadString();
     
-    sql.Query("DELETE FROM Sublime_Levels WHERE SteamID = '" .. steamid .. "'");
-    sql.Query("DELETE FROM Sublime_Skills WHERE SteamID = '" .. steamid .. "'");
+    if (Sublime.MySQL.Enabled) then
+        local SQL = Sublime.GetSQL();
+
+        SQL:Query({"DELETE FROM Sublime_Levels WHERE SteamID = ?", steamid});
+        SQL:Query({"DELETE FROM Sublime_Skills WHERE SteamID = ?", steamid});
+    else
+        sql.Query("DELETE FROM Sublime_Levels WHERE SteamID = '" .. steamid .. "'");
+        sql.Query("DELETE FROM Sublime_Skills WHERE SteamID = '" .. steamid .. "'");
+    end
 
     local target = player.GetBySteamID64(steamid);
     if (IsValid(target)) then
@@ -320,15 +415,52 @@ concommand.Add("sublimelevels_fill_leaderboards", function(ply, cmd, args)
         http.Fetch("https://steamid.xyz/" .. steamid,
             function(body, length, headers, code)
                 local getName = body:match([[(<meta name="description" content=".-">)]])
+
+                if (not getName) then
+                    return;
+                end
+            
                 getName = getName:Replace("<meta name=\"description\" content=\"");
                 getName = getName:Replace("SteamId.xyz\">", "");
-                foundName = getName;
+                getName = getName:Replace("steamID results for ", "");
+                getName = getName:Replace(steamid .. "\">", "");
+
+                getName = string.Split(getName, " ");
+
+                foundName = getName[1];
 
                 if (foundName and foundName ~= "" and 
                 foundName ~= "testing" and not foundName:find("is an online tool")) then
-                    Sublime.Print("Name found: " .. foundName);
+                    Sublime.Print("Name found: " .. foundName .. " with steamid: " .. steamid);
+                    
+                    if (Sublime.MySQL.Enabled) then
+                        local total = math.random(0, 999999);
+                        local level = ((total * Sublime.Config.ExperienceTimes) / Sublime.Config.BaseExperience);
+                        local xp = math.random(0, 999999)
 
-                    sql.Query(Sublime.SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], steamid, 1575, foundName));
+                        local prep = Sublime.MySQL.DB:prepare("INSERT IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES(?, ?, ?, ?, ?, ?)");
+
+                        function prep:onSuccess(data)
+                            if (prep:affectedRows() > 0) then
+                                Sublime.Print("Successfully inserted rows into [InsertPlayer]");
+                            end
+                        end
+                    
+                        function prep:onError(err)
+                            print("MySQL error in [InsertPlayer]: " .. err);
+                        end
+
+                        prep:setString(1, steamid);
+                        prep:setNumber(2, math.Round(level));
+                        prep:setNumber(3, xp);
+                        prep:setNumber(4, xp * Sublime.Config.ExperienceTimes);
+                        prep:setNumber(5, math.Round(total * Sublime.Config.ExperienceTimes));
+                        prep:setString(6, foundName);
+                    
+                        prep:start();
+                    else
+                        sql.Query(Sublime.SQL:FormatSQL([[INSERT OR IGNORE INTO Sublime_Levels (SteamID, Level, Experience, TotalExperience, NeededExperience, Name) VALUES('%s', '1', '0', '0', '%i', '%s')]], steamid, 1575, foundName));
+                    end
                 end
             end,
 
