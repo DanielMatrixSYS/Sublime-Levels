@@ -5,6 +5,9 @@ local texts     = {}
 local lifetime  = CurTime();
 local fadeout   = false;
 local sRemove   = false;
+local ca        = ColorAlpha;
+local approach  = math.Approach;
+local r         = math.random;
 
 hook.Add("HUDPaint", path, function()
     local shouldDisplayHUD = Sublime.Settings.Get("hud", "display", "boolean");
@@ -20,24 +23,27 @@ hook.Add("HUDPaint", path, function()
             continue;
         end
 
-        local text = tData.text;
-        local display = tData.shouldDisplay;
-        local alpha = tData.alpha;
-        local font = tData.font;
-        local padding = tData.padding;
+        local text      = tData.text;
+        local display   = tData.shouldDisplay;
+        local alpha     = tData.alpha;
+        local font      = tData.font;
+        local padding   = tData.padding;
+        local color     = tData.color;
 
         if (display <= CurTime()) then
             if (not fadeout) then
-                texts[i].alpha = math.Approach(texts[i].alpha, 255, 1);
+                texts[i].alpha = approach(texts[i].alpha, 255, 1);
             else
-                texts[i].alpha = math.Approach(texts[i].alpha, 0, 1);
+                texts[i].alpha = approach(texts[i].alpha, 0, 1);
 
-                if (texts[i].alpha <= 0) then
+                if (texts[i].alpha <= 1) then
                     sRemove = true;
                 end
             end
+            
+            color = ca(color, alpha);
 
-            Sublime:DrawTextOutlined(text, font, w / 2, (h / 4) + (30 * (i - 1)) + padding, Color(255, 255, 255, alpha), Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, true);
+            Sublime:DrawTextOutlined(text, font, w / 2, (h / 4) + (30 * (i - 1)) + padding, color, Color(0, 0, 0, alpha), TEXT_ALIGN_CENTER, true);
         end
     end
 
@@ -52,16 +58,17 @@ hook.Add("HUDPaint", path, function()
 end);
 
 hook.Add("Sublime.LevelUpNotification", path, function(nLevel)
-    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. "!", shouldDisplay = CurTime(), alpha = 0, font = "Sublime.36", padding = 0});
-    table.insert(texts, {text = "You have reached level: \n" .. nLevel, shouldDisplay = CurTime() + 2, alpha = 0, font = "Sublime.36", padding = 20});
+    local time = CurTime();
+
+    table.insert(texts, {text = "Congratulations, " .. LocalPlayer():Nick() .. "!", shouldDisplay = time, alpha = 0, font = "Sublime.36", padding = 0, color = Color(240, 240, 240)});
+    table.insert(texts, {text = "You have reached level:", shouldDisplay = time + 2, alpha = 0, font = "Sublime.36", padding = 10, color = Color(240, 240, 240)});
+    table.insert(texts, {text = nLevel, shouldDisplay = time + 4, alpha = 0, font = "Sublime.LevelUp.Level", padding = 30, color = Color(r(0, 255), r(0, 255), r(0, 255))});
     
     if (Sublime.Settings.Table["SERVER"]["other"]["skills_enabled"]) then
-        table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = CurTime() + 4, alpha = 0, font = "Sublime.30", padding = 50});
+        table.insert(texts, {text = "You have been given a Skill Point.", shouldDisplay = time + 7, alpha = 0, font = "Sublime.22", padding = 50, color = Color(240, 240, 240)});
     end
-    
-    //table.insert(texts, {text = "Your leaderboards position has changed.", shouldDisplay = CurTime() + 5, alpha = 0, font = "Sublime.30", padding = 50});
 
-    lifetime = CurTime() + 10;
+    lifetime = CurTime() + 12;
     fadeout = false;
     sRemove = false;
     dNoti = true;

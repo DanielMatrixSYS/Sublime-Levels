@@ -1,3 +1,4 @@
+local taxCooldown = {};
 local path = Sublime.GetCurrentPath();
 
 hook.Add("lotteryEnded", path, function(_, chosen)
@@ -29,11 +30,21 @@ hook.Add("playerArrested", path, function(criminal, _, actor)
     end
 end);
 
-hook.Add("onPaidTax", path, function(ply)
+hook.Add("onPaidTax", path, function(ply, taxAmount, wallet)
     if (not IsValid(ply)) then
+        return;
+    end
+
+    local time = CurTime();
+
+    if (taxCooldown[ply:SteamID()] and taxCooldown[ply:SteamID()] > time) then
+        Sublime.Notify(ply, "Tax experience cooldown " .. math.Round(taxCooldown[ply:SteamID()] - time) .. " seconds remaining.");
+
         return;
     end
 
     local experience = Sublime.Settings.Get("darkrp", "player_taxed", "number");
     ply:SL_AddExperience(experience, "for paying tax, like a good person.");
+
+    taxCooldown[ply:SteamID()] = time + Sublime.Settings.Get("darkrp", "tax_cooldown", "number");
 end);

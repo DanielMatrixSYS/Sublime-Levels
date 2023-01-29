@@ -42,3 +42,5 @@ end
 for i = 12, 48, 2 do
     addFont(prefix .. i, i);
 end
+
+surface.CreateFont("Sublime.LevelUp.Level", {font = "Nunito", size = 42, weight = 400, italic = true});

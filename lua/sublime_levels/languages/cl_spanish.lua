@@ -157,7 +157,7 @@ Sublime.Languages["es"] =
         npc_on_kill_experience                  = "¿Cuánta experiencia deben recibir los jugadores al matar a un NPC? (Por defecto 100)",
         player_on_kill_experience               = "¿Cuánta experiencia deben recibir los jugadores al matar a otro jugador? (Por defecto 150)",
         headshot_modifier                       = "¿Cuál debe ser el modificador de tiro en la cabeza? Ejemplo: 100 * 1.2 = 120. (Por defecto 1.2)",
-        vip_modifier                            = "¿Cuánta experiencia extra deben recibir los jugadores VIP? (Por defecto 2)",
+        vip_modifier                            = "¿Cuánta experiencia extra deben recibir los jugadores VIP? Example: 100 * 2 = 200. (Por defecto 2)",
         chat_command                            = "¿Cuál debe ser el comando de chat para abrir el menú?",
         max_level                               = "¿Cuál debe ser el nivel máximo? (Por defecto 99)",
         xp_for_playing_when                     = "¿Con qué frecuencia deben recibir los jugadores experiencia solo por jugar, en segundos? (Por defecto 600)",
@@ -184,6 +184,7 @@ Sublime.Languages["es"] =
         bystander_winners                       = "¿Cuánta experiencia deben recibir los transeúntes cuando ganan la ronda? (Por defecto 250)",
         needed_on_server_before_xp              = "¿Cuántos jugadores son necesarios en el servidor antes de dar experiencia? (Por defecto 4)",
         should_broadcast_levelup                = "¿Deberíamos anunciar el nivel de los jugadores a otros jugadores? (Por defecto Sí)",
+        tax_cooldown                            = "How often can players receive experience upon being taxed? (This is in seconds.) Def. 20",
 
 
         server_skills_strength_en   = "¿Deberia estar activo el árbol de fuerza?",

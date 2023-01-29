@@ -133,7 +133,7 @@ function panel:PostInit()
                 return;
             end
 
-            local notification = Sublime.MakeNotification(self.L("skills_are_you_sure"), "Are you sure you want to convert your data from SQLite to MySQL? This will not append data, but the existing data will be deleted. This should only be done once.\nOnce the process is finished the server will do a map change to its current map.\nThis requires superadmin priviliges.", true);
+            local notification = Sublime.MakeNotification(self.L("skills_are_you_sure"), "Are you sure you want to convert your data from SQLite to MySQL? This should only be done once. If you have already done this then it is not recommended.\nOnce the process is finished the server will do a map change to its current map.\nThis requires superadmin priviliges.", true);
             notification.DoAcceptClick = function()
                 local notification1 = Sublime.MakeNotification("Server", "This should be done on a server where you are currently alone, do you want to continue?", true);
                 notification1.DoAcceptClick = function()

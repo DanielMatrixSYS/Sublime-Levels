@@ -156,7 +156,7 @@ function panel:CreateCategory(category, data)
     cat.AddItem("Save", "Save", "DButton", 0, 25, function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, Sublime.Colors.Black);
         Sublime:DrawRoundedGradient(panel, 8, 1, 1, w - 2, h - 2, Sublime.Colors.Green, Sublime:DarkenColor(Sublime.Colors.Green, 50))
-    end,
+    end)
 
     return cat;
 end

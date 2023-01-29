@@ -5,7 +5,7 @@ Sublime.MySQL = Sublime.MySQL or {};
 --Enable to activate MySQL.
 --In order for this to work properly, you have to manually create a database called: sublime_levels
 --All of the associated tables will be created as soon as the server is started.
-Sublime.MySQL.Enabled = true;
+Sublime.MySQL.Enabled = false;
 
 Sublime.Settings = Sublime.Settings or {};
 Sublime.Settings.Table = Sublime.Settings.Table or {
@@ -37,6 +37,7 @@ Sublime.Settings.Table = Sublime.Settings.Table or {
             ["hitman_completed"]    = 300,
             ["player_arrested"]     = 75,
             ["player_taxed"]        = 25,
+            ["tax_cooldown"]        = 20,
         },
 
         ["ttt"] = {
