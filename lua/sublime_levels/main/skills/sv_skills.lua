@@ -62,7 +62,6 @@ net.Receive("Sublime.UpgradeSkill", function(_, ply)
         ---
         --- Update data
         ---
-
         if (Sublime.MySQL.Enabled) then
             Sublime.GetSQL():Query({"SELECT Skill_Data FROM Sublime_Skills WHERE SteamID = ?", steamid}, function(data)
                 local tbl = util.JSONToTable(data[1].Skill_Data);

@@ -155,7 +155,7 @@ Sublime.Languages["en"] =
         npc_on_kill_experience                  = "How much experience should players receive on killing a NPC? Def. 100",
         player_on_kill_experience               = "How much experience should players receive on killing a player? Def.150",
         headshot_modifier                       = "What should the headshot modifier be? Example: 100 * 1.2 = 120. Def. 1.2",
-        vip_modifier                            = "How much extra experience should VIP players get? Def. 2",
+        vip_modifier                            = "How much extra experience should VIP players get? Example: 100 * 2 = 200. Def. 2",
         chat_command                            = "What should the chat command for opening the menu be?",
         max_level                               = "What should the max level be? Def. 99",
         xp_for_playing_when                     = "How often should players receieve experience just for playing, in seconds? Def. 600",
@@ -182,6 +182,7 @@ Sublime.Languages["en"] =
         bystander_winners                       = "How much experience should bystanders get when they win the round? Def. 250",
         needed_on_server_before_xp              = "How many players are needed on the server before giving experience? Def. 4",
         should_broadcast_levelup                = "Should we broadcast the players level up to other players? Def. Yes",
+        
 
 
         server_skills_strength_en   = "Should we enable the strength tree?",

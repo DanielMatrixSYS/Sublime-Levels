@@ -37,6 +37,7 @@ Sublime.Settings.Table = Sublime.Settings.Table or {
             ["hitman_completed"]    = 300,
             ["player_arrested"]     = 75,
             ["player_taxed"]        = 25,
+            ["tax_cooldown"]        = 20,
         },
 
         ["ttt"] = {
