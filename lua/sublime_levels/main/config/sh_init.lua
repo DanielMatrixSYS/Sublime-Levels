@@ -18,7 +18,7 @@ Sublime.Settings.Table = Sublime.Settings.Table or {
         
         ["other"] = {
             ["vip_modifier"]                = 2,
-            ["max_level"]                   = 99,
+            ["max_level"]                   = 125,
             ["xp_for_playing_when"]         = 600,
             ["xp_for_playing"]              = 25,
             ["needed_on_server_before_xp"]  = 0,
