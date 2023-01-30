@@ -182,99 +182,133 @@ net.Receive("Sublime.GetLeaderboardsData", function(_, ply)
     ply.SublimeLeaderboardsDataCooldown = CurTime() + 1;
 end);
 
-local GIVE_LEVELS   = 0x1;
-local TAKE_LEVELS   = 0x2;
-local GIVE_SKILLS   = 0x3;
-local TAKE_SKILLS   = 0x4;
-local GIVE_XP       = 0x5;
-local RESET_XP      = 0x6;
-
 net.Receive("Sublime.AdminAdjustData", function(_, ply)
     if (not Sublime.Config.ConfigAccess[ply:GetUserGroup()]) then
         return;
     end
 
-    local toAdjust  = net.ReadUInt(4);
-    local value     = net.ReadUInt(32);
-    local target    = net.ReadEntity();
-    local steamid   = target:SteamID64();
+    local toAdjust              = net.ReadUInt(4);
+    local value                 = net.ReadUInt(32);
+    local steamid               = net.ReadString();
+    local target                = player.GetBySteamID64(steamid);
+    local cmdFromLeaderboards   = net.ReadBool();
 
-    if (not IsValid(target)) then
-        return;
-    end
-
-    if (toAdjust == GIVE_LEVELS) then
-        local cLevel    = target:SL_GetLevel();
-        local after     = cLevel + value;
-        local max       = Sublime.Settings.Get("other", "max_level", "number");
-
-        if (after > max) then
-            return;
-        end
-
+    if (toAdjust == SUBLIME_GIVE_LEVELS) then
         if (value < 1) then
             return;
         end
 
-        target:SL_LevelUp(value);
+        if (IsValid(target) and not cmdFromLeaderboards) then
+            local cLevel    = target:SL_GetLevel();
+            local after     = cLevel + value;
+            local max       = Sublime.Settings.Get("other", "max_level", "number");
 
-        return;
-    end
+            if (after > max) then
+                value = max - cLevel;
+            end
+            
+            target:SL_LevelUp(value);
+        else
+            if (IsValid(target)) then
+                target:SL_SetLevel(value, false);
+            else
+                if (value > Sublime.Settings.Get("other", "max_level", "number")) then
+                    value = Sublime.Settings.Get("other", "max_level", "number");
+                end
 
-    if (toAdjust == TAKE_LEVELS) then
-        local cLevel    = target:SL_GetLevel();
-        local after     = cLevel - value;
+                local needed = math.Round(value * Sublime.Config.BaseExperience) * Sublime.Config.ExperienceTimes;
 
-        if (after < 0) then
-            after = 1
+                Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", value, needed, steamid)); 
+            end
         end
 
-        target:SL_SetInteger("experience", 0);
-        target:SetNW2Int("sl_level", after);
-        target:SetNW2Int("sl_experience", 0);
-
-        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", after, target:SL_GetNeededExperience(), target:SteamID64()));
-
-        Sublime.Print("%s has taken %i levels from %s.", ply:Nick(), value, target:Nick());
-
         return;
     end
 
-    if (toAdjust == GIVE_SKILLS) then
-        target:SL_AddSkillPoint(value);
-
-        return;
-    end
-
-    if (toAdjust == TAKE_SKILLS) then
-        local sPoints   = target:SL_GetInteger("ability_points", 0);
-        local after     = sPoints - value;
-
-        if (after < 0) then
-            after = 0;
+    if (toAdjust == SUBLIME_TAKE_LEVELS) then
+        if (value < 1) then
+            return;
         end
 
-        target:SL_SetInteger("ability_points", after);
+        if (IsValid(target)) then
+            local cLevel    = target:SL_GetLevel();
+            local after     = cLevel - value;
 
-        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", after, target:SteamID64()));
+            if (after < 1) then
+                after = 1;
+            end
 
-        Sublime.Print("%s has now %i skill points to use.", target:Nick(), after);
+            target:SL_SetInteger("experience", 0);
+            target:SetNW2Int("sl_level", after);
+            target:SetNW2Int("sl_experience", 0);
+
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", after, target:SL_GetNeededExperience(), target:SteamID64()));
+
+            Sublime.Print("%s has taken %i levels from %s.", ply:Nick(), value, target:Nick());
+        else
+            local needed = math.Round(value * Sublime.Config.BaseExperience) * Sublime.Config.ExperienceTimes;
+            
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = Level - '%s' WHERE SteamID = '%s'", value, steamid));
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", value, steamid));
+        end
 
         return;
     end
 
-    if (toAdjust == GIVE_XP) then
-        target:SL_AddExperience(value, "from an Admin.", true, false, true);
+    if (toAdjust == SUBLIME_GIVE_SKILLS) then
+        if (IsValid(target)) then
+            target:SL_AddSkillPoint(value);
+        else
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = Points + '%s' WHERE SteamID = '%s'", value, steamid));
+        end 
 
         return;
     end
 
-    if (toAdjust == RESET_XP) then
-        target:SL_SetInteger("experience", 0);
-        target:SetNW2Int("sl_experience", 0);
+    if (toAdjust == SUBLIME_TAKE_SKILLS) then
+        if (IsValid(target)) then
+            local sPoints   = target:SL_GetInteger("ability_points", 0);
+            local after     = sPoints - value;
 
-        Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0' WHERE SteamID = '%s'", target:SteamID64()));
-        Sublime.Print("%s has reset %s's experience.", ply:Nick(), target:Nick());
+            if (after < 0) then
+                after = 0;
+            end
+
+            target:SL_SetInteger("ability_points", after);
+
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = '%s' WHERE SteamID = '%s'", after, target:SteamID64()));
+
+            Sublime.Print("%s has now %i skill points to use.", target:Nick(), after);
+        else
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Skills SET Points = Points - '%s' WHERE SteamID = '%s'", value, steamid));
+        end
+
+        return;
+    end
+
+    if (toAdjust == SUBLIME_GIVE_XP) then
+        if (IsValid(target)) then
+            target:SL_AddExperience(value, "from an Admin.", true, false, true);
+        else
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = Experience + '%s', TotalExperience = TotalExperience + '%s' WHERE SteamID = '%s'", value, value, steamid));
+        end
+
+        return;
+    end
+
+    if (toAdjust == SUBLIME_RESET_XP) then
+        if (IsValid(target)) then
+            target:SL_SetInteger("experience", 0);
+            target:SetNW2Int("sl_experience", 0);
+
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0' WHERE SteamID = '%s'", target:SteamID64()));
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET TotalExperience = '0' WHERE SteamID = '%s'", target:SteamID64()));
+
+            Sublime.Print("%s has reset %s's experience.", ply:Nick(), target:Nick());
+        else
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Experience = '0' WHERE SteamID = '%s'", steamid));
+            Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET TotalExperience = '0' WHERE SteamID = '%s'", steamid));
+        end
 
         return;
     end

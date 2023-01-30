@@ -1,6 +1,7 @@
 local mat = Material("pp/blurscreen");
 local approach = math.Approach;
 local round, min, floor, clamp = math.Round, math.min, math.floor, math.Clamp;
+local ca = ColorAlpha;
 
 ---
 --- DrawPanelBlur
@@ -202,6 +203,133 @@ function Sublime:DrawPanelTip(panel, str)
     end
 
     panel.IsDrawingTip = true;
+end
+
+function Sublime:CreateDropDownMenu(playerName, options)
+    local c = Sublime.Colors;
+    local p = 10; -- padding
+    local d = Color(0, 0, 0, 225); -- dark
+    
+    local screenWidth = ScrW();
+    local screenHeight = ScrH();
+
+    local menu = vgui.Create("DPanel");
+    local x, y = input.GetCursorPos();
+
+    surface.SetFont("Sublime.18");
+    local maxWidth = surface.GetTextSize(playerName) + (p * 3)
+
+    if (maxWidth < 200) then
+        maxWidth = 200;
+    end
+
+    for i = #options, 1, -1 do
+        local option = options[i];
+
+        if (option) then
+            if (not option.hasAccess) then
+                table.remove(options, i);
+            end
+        end
+    end
+
+    local menuTall = 30 + (#options * 30);
+
+    if ((y + menuTall) > screenHeight) then
+        y = screenHeight - menuTall;
+    end
+
+    if ((x + maxWidth) > screenWidth) then
+        x = screenWidth - maxWidth;
+    end
+
+    menu:SetPos(x - p, y - p);
+    menu:SetSize(maxWidth, menuTall);
+
+    menu.Paint = function(s, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, c.Royal);
+        draw.RoundedBox(8, 1, 1, w - 2, h - 2, c.Black);
+    end
+
+    menu.Think = function()
+        local x, y = input.GetCursorPos();
+        local pX, pY = menu:GetPos();
+
+        if (x < pX or y < pY or x > (pX + menu:GetWide()) or y > (pY + menu:GetTall())) then
+            menu:Remove();
+        end
+    end
+
+    local name = menu:Add("DLabel");
+    name:SetText("");
+    name:SetSize(menu:GetWide(), 30);
+    name:SetPos(0, 0);
+
+    name.Paint = function(panel, w, h)
+        surface.SetDrawColor(0, 0, 0, 0);
+        surface.DrawRect(0, 0, w, h);
+
+        surface.SetDrawColor(c.Royal);
+        surface.DrawRect(0, h - 1, w, 1)
+
+        self:DrawTextOutlined(playerName, "Sublime.18", w / 2, h / 2, c.Royal, c.Black, TEXT_ALIGN_CENTER, true);
+    end
+
+    for i = 1, #options do
+        local data      = options[i];
+        local text      = data.text;
+        local func      = data.func;
+        local access    = data.hasAccess;
+        local tip       = data.tip;
+
+        if (access == false) then
+            continue;
+        end
+
+        local button = menu:Add("DButton");
+        button:SetText("");
+        button:SetSize(menu:GetWide(), 30);
+        button:SetPos(0, i * 30);
+
+        button.Paint = function(panel, w, h)
+            local clr = ca(c.White, 150);
+
+            if (panel:IsHovered()) then
+                clr = c.Royal;
+            end
+
+            surface.SetDrawColor(0, 0, 0, 0);
+            surface.DrawRect(0, 0, w, h);
+
+            if (i ~= #options) then
+                surface.SetDrawColor(ColorAlpha(c.Grey, 25));
+                surface.DrawRect(0, h - 1, w, 1)
+            end 
+
+            if (panel:IsHovered() and tip) then
+                if (panel.HoverTime < CurTime()) then
+                    self:DrawPanelTip(panel, tip);
+                end
+            else
+                panel.HoverTime = CurTime() + 0.25;
+            end
+
+            self:DrawTextOutlined(text, "Sublime.18", w / 2, h / 2, clr, c.Black, TEXT_ALIGN_CENTER, true);
+        end
+
+        button.DoClick = function()
+            func();
+            menu:Remove();
+        end
+
+        button.DoRightClick = function()
+            menu:Remove();
+        end
+    end
+
+    menu:MakePopup();
+
+    return menu;
 end
 
 function Sublime:DoHoverAnim(panel, current, hover, not_hover, custom)

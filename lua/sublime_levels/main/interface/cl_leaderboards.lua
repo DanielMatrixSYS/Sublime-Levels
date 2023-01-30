@@ -75,11 +75,7 @@ function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, ex
             s.MyColorAlpha = math.Approach(s.MyColorAlpha, 200, 2);
 
             if (s.HoverTime < CurTime()) then
-                if (not LocalPlayer():IsSuperAdmin()) then
-                    Sublime:DrawPanelTip(s, "Click to open profile");
-                else
-                    Sublime:DrawPanelTip(s, "[LEFT CLICK] to open profile\n[RIGHT CLICK] to delete user");
-                end
+                Sublime:DrawPanelTip(s, "[RIGHT CLICK] to open options menu");
             end
         else
             s.MyColorAlpha = math.Approach(s.MyColorAlpha, 100, 2);
@@ -90,19 +86,153 @@ function panel:AddPlayerToLeaderboard(parent, steamid, position, name, level, ex
     end
 
     parent.Players[nextPlayer].OnMousePressed = function(ply, key)
-        if (key == MOUSE_LEFT) then
-            gui.OpenURL("https://steamcommunity.com/profiles/" .. steamid);
-        else
-            if (LocalPlayer():IsSuperAdmin()) then
-                local noti = Sublime.MakeNotification("Delete user?", "This will completely wipe the users data and he will be kicked if he is on the server.\nAfter they've connected again they'll have to start from scratch.\n\nThis requires superadmin privileges.", true);
-                noti.DoAcceptClick = function()
-                    net.Start("Sublime.DeleteUser")
-                        net.WriteString(steamid);
-                    net.SendToServer();
-                
-                    panelRefrence:Remove();
-                end
-            end
+        local localplayer = LocalPlayer();
+
+        if (key == MOUSE_RIGHT) then
+            Sublime:CreateDropDownMenu(name, {
+                {
+                    text = self.L("leaderboards_open_profile"),
+                    tip = self.L("database_profile_tip"),
+                    func = function()
+                        gui.OpenURL("https://steamcommunity.com/profiles/" .. steamid);
+                    end,
+
+                    hasAccess = true
+                },
+
+                {
+                    text = self.L("leaderboards_copy_steamid"),
+                    tip = self.L("database_copy_steamid_tip"),
+                    func = function()
+                        SetClipboardText(steamid);
+                    end,
+
+                    hasAccess = true
+                },
+
+                {
+                    text = self.L("leaderboards_set_level"),
+                    tip = self.L("database_set_level_tip"),
+                    func = function()
+                        local notification = Sublime.MakeNotification(self.L("leaderboards_set_level"), self.L("leaderboards_set_level_desc"), true, true);
+                        
+                        notification.DoAcceptClick = function(s)
+                            local value = tonumber(notification:GetTextEntryValue());
+
+                            if (not isnumber(value)) then
+                                Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"), false);
+            
+                                return false;
+                            end
+
+                            net.Start("Sublime.AdminAdjustData");
+                                net.WriteUInt(SUBLIME_GIVE_LEVELS, 4);
+                                net.WriteUInt(value, 32);
+                                net.WriteString(steamid);
+                                net.WriteBool(true);
+                            net.SendToServer();
+                        end
+                    end,
+
+                    hasAccess = localplayer:IsSuperAdmin()
+                },
+
+                {
+                    text = self.L("leaderboards_give_exp"),
+                    tip = self.L("database_give_xp_tip"),
+                    func = function()
+                        local notification = Sublime.MakeNotification(self.L("notification_give_experience"), self.L("notification_give_experience_desc"), true, true);
+                        
+                        notification.DoAcceptClick = function(s)
+                            local value = tonumber(notification:GetTextEntryValue());
+
+                            if (not isnumber(value)) then
+                                Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"), false);
+            
+                                return false;
+                            end
+
+                            net.Start("Sublime.AdminAdjustData");
+                                net.WriteUInt(SUBLIME_GIVE_XP, 4);
+                                net.WriteUInt(value, 32);
+                                net.WriteString(steamid);
+                                net.WriteBool(true);
+                            net.SendToServer();
+                        end
+                    end,
+
+                    hasAccess = localplayer:IsSuperAdmin()
+                },
+
+                {
+                    text = self.L("leaderboards_give_skill"),
+                    tip = self.L("database_give_skill_tip"),
+                    func = function()
+                        local notification = Sublime.MakeNotification(self.L("notification_give_skill"), self.L("notification_give_skill_desc"), true, true);
+                        
+                        notification.DoAcceptClick = function(s)
+                            local value = tonumber(notification:GetTextEntryValue());
+
+                            if (not isnumber(value)) then
+                                Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"), false);
+            
+                                return false;
+                            end
+
+                            net.Start("Sublime.AdminAdjustData");
+                                net.WriteUInt(SUBLIME_GIVE_SKILLS, 4);
+                                net.WriteUInt(value, 32);
+                                net.WriteString(steamid);
+                                net.WriteBool(true);
+                            net.SendToServer();
+                        end
+                    end,
+
+                    hasAccess = localplayer:IsSuperAdmin()
+                },
+
+                {
+                    text = self.L("leaderboards_take_skill"),
+                    tip = self.L("database_take_skill_tip"),
+                    func = function()
+                        local notification = Sublime.MakeNotification(self.L("notification_take_skill"), self.L("notification_take_skill_desc"), true, true);
+                        
+                        notification.DoAcceptClick = function(s)
+                            local value = tonumber(notification:GetTextEntryValue());
+
+                            if (not isnumber(value)) then
+                                Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"), false);
+            
+                                return false;
+                            end
+
+                            net.Start("Sublime.AdminAdjustData");
+                                net.WriteUInt(SUBLIME_TAKE_SKILLS, 4);
+                                net.WriteUInt(value, 32);
+                                net.WriteString(steamid);
+                                net.WriteBool(true);
+                            net.SendToServer();
+                        end
+                    end,
+                    hasAccess = localplayer:IsSuperAdmin()
+                },
+
+                {
+                    text = self.L("leaderboards_reset_user"),
+                    tip = self.L("database_reset_user_tip"),
+                    func = function()
+                        local notification = Sublime.MakeNotification(self.L("database_delete"), self.L("database_delete_description"), true, false);
+                        
+                        notification.DoAcceptClick = function(s)
+                            net.Start("Sublime.DeleteUser");
+                                net.WriteString(steamid);
+                            net.SendToServer();
+                        end
+                    end,
+
+                    hasAccess = localplayer:IsSuperAdmin()
+                },
+            });
         end
     end
 

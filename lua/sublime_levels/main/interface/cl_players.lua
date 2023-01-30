@@ -6,10 +6,9 @@ local panel = {};
 --- PostInit
 ---
 function panel:PostInit()
-    local count     = player.GetCount();
     local players   = player.GetAll();
 
-    for i = 1, count do
+    for i = 1, #players do
         local ply = players[i];
 
         if (IsValid(ply)) then
