@@ -1,27 +1,20 @@
 local panel = {};
 AccessorFunc(panel, "Player", "Player");
 
-local GIVE_LEVELS   = 0x1;
-local TAKE_LEVELS   = 0x2;
-local GIVE_SKILLS   = 0x3;
-local TAKE_SKILLS   = 0x4;
-local GIVE_XP       = 0x5;
-local RESET_XP      = 0x6; 
-
 ---
 --- PostInit
 ---
 function panel:PostInit()
-    self:AddCMD(GIVE_LEVELS, self.L("notification_give_level"), self.L("notification_give_level") .. "?", self.L("notification_give_level_desc"), self.L("notification_accept"), true);
-    self:AddCMD(TAKE_LEVELS, self.L("notification_take_level"), self.L("notification_take_level") .. "?", self.L("notification_take_level_desc"), self.L("notification_accept"), true);
+    self:AddCMD(SUBLIME_GIVE_LEVELS, self.L("notification_give_level"), self.L("notification_give_level") .. "?", self.L("notification_give_level_desc"), self.L("notification_accept"), true);
+    self:AddCMD(SUBLIME_TAKE_LEVELS, self.L("notification_take_level"), self.L("notification_take_level") .. "?", self.L("notification_take_level_desc"), self.L("notification_accept"), true);
 
     if (Sublime.Settings.Table["SERVER"]["other"].skills_enabled) then
-        self:AddCMD(GIVE_SKILLS, self.L("notification_give_skill"), self.L("notification_give_skill") .. "?", self.L("notification_give_skill_desc"), self.L("notification_accept"), true);
-        self:AddCMD(TAKE_SKILLS, self.L("notification_take_skill"), self.L("notification_take_skill") .. "?", self.L("notification_take_skill_desc"), self.L("notification_accept"), true);
+        self:AddCMD(SUBLIME_GIVE_SKILLS, self.L("notification_give_skill"), self.L("notification_give_skill") .. "?", self.L("notification_give_skill_desc"), self.L("notification_accept"), true);
+        self:AddCMD(SUBLIME_TAKE_SKILLS, self.L("notification_take_skill"), self.L("notification_take_skill") .. "?", self.L("notification_take_skill_desc"), self.L("notification_accept"), true);
     end
 
-    self:AddCMD(GIVE_XP, self.L("notification_give_experience"), self.L("notification_give_experience") .. "?", self.L("notification_give_experience_desc"), self.L("notification_accept"), true);
-    self:AddCMD(RESET_XP, self.L("notification_reset_experience"), self.L("notification_reset_experience") .. "?", self.L("notification_reset_experience_desc"), self.L("notification_accept"), false);
+    self:AddCMD(SUBLIME_GIVE_XP, self.L("notification_give_experience"), self.L("notification_give_experience") .. "?", self.L("notification_give_experience_desc"), self.L("notification_accept"), true);
+    self:AddCMD(SUBLIME_RESET_XP, self.L("notification_reset_experience"), self.L("notification_reset_experience") .. "?", self.L("notification_reset_experience_desc"), self.L("notification_accept"), false);
 
     self.PlayerNick         = self.Player:Nick();
     self.PlayerSteamID      = self.Player:SteamID64();
@@ -66,18 +59,18 @@ function panel:AddCMD(id, name, noti_header, noti_desc, noti_accept, useTextEntr
                 local value = tonumber(noti:GetTextEntryValue());
 
                 if (not isnumber(value) and useTextEntry) then
-                    Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"));
+                    Sublime.MakeNotification(self.L("notification_invalid_character_title"), self.L("notification_invalid_character_des"), false);
 
                     return false;
                 end
 
                 if (not IsValid(self.Player)) then
-                    Sublime.MakeNotification(self.L("notification_player_invalid_title"), self.L("notification_player_invalid_desc"));
+                    Sublime.MakeNotification(self.L("notification_player_invalid_title"), self.L("notification_player_invalid_desc"), false);
                     
                     return;
                 end
 
-                if (id == GIVE_LEVELS) then
+                if (id == SUBLIME_GIVE_LEVELS) then
                     local currentLevel = self.Player:GetNW2Int("sl_level", 1);
                     local after = currentLevel + value;
                     local max = tonumber(Sublime.Settings.Table["SERVER"]["other"]["max_level"]);
@@ -98,7 +91,8 @@ function panel:AddCMD(id, name, noti_header, noti_desc, noti_accept, useTextEntr
                 net.Start("Sublime.AdminAdjustData");
                     net.WriteUInt(id, 4);
                     net.WriteUInt(value, 32);
-                    net.WriteEntity(self.Player);
+                    net.WriteString(self.PlayerSteamID);
+                    net.WriteBool(false);
                 net.SendToServer();
                 
                 Sublime.MakeNotification(self.L("notification_success_title"), self.L("notification_success_desc", self.PlayerNick));
@@ -106,7 +100,8 @@ function panel:AddCMD(id, name, noti_header, noti_desc, noti_accept, useTextEntr
                 net.Start("Sublime.AdminAdjustData");
                     net.WriteUInt(id, 4);
                     net.WriteUInt(0, 32);
-                    net.WriteEntity(self.Player);
+                    net.WriteString(self.PlayerSteamID);
+                    net.WriteBool(false);
                 net.SendToServer();
 
                 Sublime.MakeNotification(self.L("notification_success_title"), self.L("notification_success_desc", self.PlayerNick));

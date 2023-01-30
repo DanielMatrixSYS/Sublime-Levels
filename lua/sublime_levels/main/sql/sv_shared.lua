@@ -20,8 +20,8 @@ end
 
 hook.Add("Tick", path, function()
     for i = 1, #queries do
-        local data = queries[i];
-        local timeNow = os.time();
+        local data      = queries[i];
+        local timeNow   = os.time();
 
         if (data) then
             local shouldQuery = data["shouldQuery"];

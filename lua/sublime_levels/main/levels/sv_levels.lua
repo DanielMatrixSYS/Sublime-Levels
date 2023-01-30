@@ -27,6 +27,10 @@ function Sublime.Player:SL_SetLevel(level, give_points)
         return false;
     end
 
+    if (level > Sublime.Settings.Get("other", "max_level", "number")) then
+        level = Sublime.Settings.Get("other", "max_level", "number");
+    end
+    
     self:SL_SetInteger("experience", 0);
     self:SetNW2Int("sl_level", level);
     self:SetNW2Int("sl_experience", 0);

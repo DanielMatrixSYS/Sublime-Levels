@@ -39,6 +39,14 @@ Sublime.Languages["en"] =
         leaderboards_level          = "Level",
         leaderboards_experience     = "Experience",
         leaderboards_t_experience   = "Total Experience",
+        leaderboards_open_profile   = "Open Profile",
+        leaderboards_copy_steamid   = "Copy SteamID64",
+        leaderboards_set_level      = "Set Level",
+        leaderboards_set_level_desc = "Set the level of the player to the given value.",
+        leaderboards_give_skill     = "Give Skill Points",
+        leaderboards_take_skill     = "Take Skill Points",
+        leaderboards_give_exp       = "Give Experience",
+        leaderboards_reset_user     = "Reset user data",
     --
 
     -- Skills
@@ -199,8 +207,18 @@ Sublime.Languages["en"] =
     --
 
     -- Database settings.
-    database_name = "Database",
-
+        database_name = "Database",
+        database_reset = "Reset user data",
+        database_reset_description = "This will reset all user data, and will not be able to be undone. Are you sure you want to do this?",
+        database_delete = "Delete user data",
+        database_delete_description = "This will delete the user data of the selected user. Are you sure you want to do this?",
+        database_profile_tip = "Opens the profile of the selected user in the steam overlay.",
+        database_copy_steamid_tip = "Copies the steamid of the selected user to your clipboard.",
+        database_set_level_tip = "Sets the level of the selected user to the specified level.\nthis can not be more than what the max level has been set in the config.",
+        database_give_xp_tip = "Gives the selected user the specified amount of experience. This should not be more than what the player needs to level up.",
+        database_give_skill_tip = "Gives the selected user the specified amount of skill points.",
+        database_take_skill_tip = "Takes the specified amount of skill points from the selected user. If you take more than what the user has, they will end up in the negative.",
+        database_reset_user_tip = "Completely resets the players data, this will remove all of their levels, experience, skill points and skills.\nIf the player is on the server then they will be kicked.",
     --
 
     -- Skill settings.

@@ -54,7 +54,7 @@ function panel:Init()
 
     self.Accept.Paint = function(panel, w, h)
         local color1 = self.CA(Sublime:LightenColor(self.C.Green, 25), panel.Alpha);
-        local color2 = self.CA(Sublime:DarkenColor(self.C.Green, 25), panel.Alpha);
+        local color2 = self.CA(Sublime:DarkenColor(self.C.Green, 100), panel.Alpha);
         
         Sublime:DrawRoundedGradient(panel, 16, 0, 0, w, h, color1, color2);
 
@@ -117,7 +117,7 @@ function panel:Think()
 
         self.Decline.Paint = function(panel, w, h)
             local color1 = self.CA(Sublime:LightenColor(self.C.Red, 25), panel.Alpha);
-            local color2 = self.CA(Sublime:DarkenColor(self.C.Red, 25), panel.Alpha);
+            local color2 = self.CA(Sublime:DarkenColor(self.C.Red, 50), panel.Alpha);
 
             Sublime:DrawRoundedGradient(panel, 16, 0, 0, w, h, color1, color2);
 
