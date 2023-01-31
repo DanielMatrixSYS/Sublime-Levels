@@ -5,6 +5,7 @@ util.AddNetworkString("Sublime.SendLeaderboardsData");
 util.AddNetworkString("Sublime.AdminAdjustData");
 util.AddNetworkString("Sublime.ResetDatabase");
 util.AddNetworkString("Sublime.DeleteUser");
+util.AddNetworkString("Sublime.ChangeUsername")
 
 ---
 --- SL_Save
@@ -357,6 +358,21 @@ net.Receive("Sublime.DeleteUser", function(_, ply)
     if (IsValid(target)) then
         target:Kick("Your Sublime Levels data has been nullified. Please reconnect.");
     end
+end);
+
+net.Receive("Sublime.ChangeUsername", function(_, ply)
+    if (not ply:IsSuperAdmin()) then
+        return;
+    end
+
+    local value = net.ReadString();
+    local steamid = net.ReadString();
+
+    if (#value < 0 or #value > 32) then
+        return;
+    end
+
+    Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Name = '%s' WHERE SteamID = '%s'", value, steamid));
 end);
 
 concommand.Add("sublimelevels_give_xp", function(ply, cmd, args)

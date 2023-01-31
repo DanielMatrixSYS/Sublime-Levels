@@ -158,10 +158,11 @@ function Sublime:DrawPanelTip(panel, str)
 
     local c = Sublime.Colors;
     local p = 10; -- padding
-    local d = Color(0, 0, 0, 225); -- dark
+
+    local sw = ScrW();
+    local sh = ScrH();
 
     local tip = vgui.Create("DPanel");
-    tip:MakePopup();
 
     tip.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, c.Royal);
@@ -171,16 +172,24 @@ function Sublime:DrawPanelTip(panel, str)
 
     tip.Think = function()
         local x, y = input.GetCursorPos();
+
+        surface.SetFont("Sublime.18");
         local w, h = surface.GetTextSize(str);
 
         local xPos = x - (w / 2);
-        local outsideOfScreen = xPos + w > ScrW();
+        local yPos = y + (p * 2);
 
-        if (outsideOfScreen) then
-            xPos = (x - w);
+        if ((xPos + p) + w > sw) then
+            local difference = ((xPos + p) + w) - sw;
+
+            xPos = xPos - difference;
         end
 
-        tip:SetPos(xPos, y + (p * 2));
+        if ((yPos + p) + h > sh) then
+            yPos = y - (p * 2) - h;
+        end
+
+        tip:SetPos(xPos, yPos);
         tip:SetSize(w + p, h + p);
 
         if (IsValid(panel)) then
@@ -208,12 +217,10 @@ end
 function Sublime:CreateDropDownMenu(playerName, options)
     local c = Sublime.Colors;
     local p = 10; -- padding
-    local d = Color(0, 0, 0, 225); -- dark
     
-    local screenWidth = ScrW();
-    local screenHeight = ScrH();
+    local sw  = ScrW();
+    local sh  = ScrH();
 
-    local menu = vgui.Create("DPanel");
     local x, y = input.GetCursorPos();
 
     surface.SetFont("Sublime.18");
@@ -235,14 +242,15 @@ function Sublime:CreateDropDownMenu(playerName, options)
 
     local menuTall = 30 + (#options * 30);
 
-    if ((y + menuTall) > screenHeight) then
-        y = screenHeight - menuTall;
+    if ((y + menuTall) > sh) then
+        y = sh - menuTall;
     end
 
-    if ((x + maxWidth) > screenWidth) then
-        x = screenWidth - maxWidth;
+    if ((x + maxWidth) > sw) then
+        x = sw - maxWidth;
     end
 
+    local menu = vgui.Create("DPanel");
     menu:SetPos(x - p, y - p);
     menu:SetSize(maxWidth, menuTall);
 
