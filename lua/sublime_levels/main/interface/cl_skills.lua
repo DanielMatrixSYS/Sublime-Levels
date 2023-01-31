@@ -1,9 +1,6 @@
-local panel = {};
-local approach = math.Approach;
+local panel     = {};
+local approach  = math.Approach;
 
----
---- Init
----
 function panel:Init()
     self.L          = Sublime.L;
     self.Player     = LocalPlayer();
@@ -30,18 +27,19 @@ function panel:Init()
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {75, 2}, {25, 2}, panel:GetParent().Dragging); 
     end  
 
-    self:CreateCategory("Physical", true);
-    self:CreateCategory("Weapons", false);
+    self:CreateCategory(self.L("skills_physical"), true);
+    //self:CreateCategory(self.L("skills_movement"), false);
+    self:CreateCategory(self.L("skills_weapons"), false);
 
     if (folderName == "darkrp") then
-        self:CreateCategory("DarkRP", false);
+        self:CreateCategory(self.L("skills_darkrp"), false);
     end
 
     if (folderName == "terrortown") then
-        self:CreateCategory("Trouble in terrorist town", false);
+        self:CreateCategory(self.L("skills_ttt"), false);
     end
 
-    self:CreateCategory("Other", false);
+    self:CreateCategory(self.L("skills_other"), false);
 
     for i = 1, #Sublime.Skills do
         local data      = Sublime.Skills[i];
@@ -66,8 +64,8 @@ function panel:Init()
     self.Reset.Paint = function(panel, w, h)
         local color1 = self.CA(Sublime:LightenColor(self.C.Red, 50), panel.Alpha);
 
-        draw.RoundedBox(8, 0, 0, w, h, color1);
-        Sublime:DrawTextOutlined("Reset Skills", "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+        Sublime:DrawRoundedGradient(panel, 8, 0, 0, w, h, color1, self.CA(Sublime:DarkenColor(self.C.Red, 50), panel.Alpha));
+        Sublime:DrawTextOutlined(self.L("skills_reset"), "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
     
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {100, 2}, {50, 2});
     end
@@ -76,13 +74,13 @@ function panel:Init()
         local level = self.Player:SL_GetLevel();
 
         if (level > 1) then
-            local noti = Sublime.MakeNotification("Are you sure?", "Are you sure you want to reset your skills?\nThis can't be undone.", true);
+            local noti = Sublime.MakeNotification(self.L("skills_are_you_sure"), self.L("skills_reset_conf"), true);
             noti.DoAcceptClick = function()
                 net.Start("Sublime.ResetSkills");
                 net.SendToServer();
             end
         else
-            Sublime.MakeNotification("Unable", "You have to level up first.");
+            Sublime.MakeNotification(self.L("skills_unable_you"), self.L("skills_you_have"));
         end
     end
 end
@@ -107,6 +105,10 @@ function panel:CalculateCurrentBonus(data, id)
         currentAmount = (skillAmount * data.AmountPerPoint) * 100
     end
 
+    if (id == "you_better_call_saul") then
+        currentAmount = (skillAmount * data.AmountPerPoint) / 100 * 100;
+    end
+    
     return currentAmount;
 end
 
@@ -143,7 +145,7 @@ function panel:CreateSkill(category, data, index)
 
         skillAmount = self.Player:SL_GetInteger(id);
 
-        Sublime:DrawTextOutlined(name .. " - " .. skillAmount .. "/" .. amount .. " - Current bonus: " .. self:CalculateCurrentBonus(Sublime.Skills[index], id) .. "%", "Sublime.18", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
+        Sublime:DrawTextOutlined(self.L("skills_current_bonus", name, skillAmount, amount, self:CalculateCurrentBonus(Sublime.Skills[index], id)), "Sublime.18", 5, 13, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_LEFT, true);
 
         for i = 1, amount do
             unlocked    = skillAmount >= i;
@@ -192,7 +194,7 @@ function panel:CreateSkill(category, data, index)
     skill.Upgrade.Paint = function(panel, w, h)
         draw.RoundedBox(8, 0, 0, w, h, self.CA(self.C.Outline, panel.Alpha));
         
-        Sublime:DrawTextOutlined("Upgrade", "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
+        Sublime:DrawTextOutlined(self.L("skills_upgrade"), "Sublime.20", w / 2, h / 2, Sublime.Colors.White, Sublime.Colors.Black, TEXT_ALIGN_CENTER, true);
         panel.Alpha = Sublime:DoHoverAnim(panel, panel.Alpha, {200, 4}, {100, 2});
     end
 
@@ -203,14 +205,14 @@ function panel:CreateSkill(category, data, index)
 
         local points = self.Player:SL_GetAbilityPoints();
         if (points > 0) then
-            local noti = Sublime.MakeNotification("Are you sure?", "Are you sure you want to upgrade " .. data.Name .. "?", true);
+            local noti = Sublime.MakeNotification(self.L("skills_are_you_sure"), self.L("skills_unlock_next", data.Name), true);
             noti.DoAcceptClick = function()
                 net.Start("Sublime.UpgradeSkill");
                     net.WriteString(id);
                 net.SendToServer();
             end
         else
-            Sublime.MakeNotification("Unable", "You don't have enough skill points to upgrade this skill.");
+            Sublime.MakeNotification(self.L("skills_unable"), self.L("skills_you_dont_have"));
         end
 
         panel.Cooldown = CurTime() + 1;
@@ -314,9 +316,6 @@ function panel:CreateCategory(category, first)
     return cat;
 end
 
----
---- PerformLayout
----
 function panel:PerformLayout(w, h)
     self.ScrollPanel:SetPos(0, 5);
     self.ScrollPanel:SetSize(w, h - 10);
@@ -344,27 +343,6 @@ function panel:PerformLayout(w, h)
     self.Reset:SetSize((w - padding) - size, 30);
 end
 
----
---- Think
----
-function panel:Think()
-    if (not self.HasCalledPostInit and self:GetWide() > 64) then
-        self:PostInit();
-
-        self.HasCalledPostInit = true;
-    end
-end
-
----
---- PostInit
----
-function panel:PostInit()
-
-end
-
----
---- Paint
----
 function panel:Paint(w, h)
     return true;
 end
