@@ -32,8 +32,8 @@ if (SERVER and SKILL.Enabled) then
         local points = criminal:SL_GetInteger(SKILL.Identifier, 0);
 
         if (points > 0) then
-            local before = time;
             local toReduce = (points * SKILL.AmountPerPoint) / 100;
+            
             time = time - (time * toReduce);
             
             SKILL.Arrested[criminal] = CurTime() + time;
