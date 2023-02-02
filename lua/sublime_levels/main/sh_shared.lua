@@ -6,3 +6,7 @@ SUBLIME_GIVE_XP       = 0x5;
 SUBLIME_RESET_XP      = 0x6;
 SUBLIME_RESET_USER    = 0x7;
 SUBLIME_DELETE_USER   = 0x8;
+
+if (DarkRP) then
+    DarkRP.registerDarkRPVar("level", net.WriteDouble, net.ReadDouble);
+end
