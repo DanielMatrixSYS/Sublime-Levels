@@ -35,6 +35,10 @@ function Sublime.Player:SL_SetLevel(level, give_points)
     self:SetNW2Int("sl_level", level);
     self:SetNW2Int("sl_experience", 0);
 
+    if (DarkRP) then
+        self:setDarkRPVar("level", level);
+    end
+
     Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", level, self:SL_GetNeededExperience(), self:SteamID64()));
 
     -- Should the player receive ability points after we set his level?
