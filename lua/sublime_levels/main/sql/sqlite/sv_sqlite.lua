@@ -95,10 +95,6 @@ function SQL:InitializePlayerForSQLite(ply)
     
     ply:SetNW2Int("sl_level", to(level));
     ply:SetNW2Int("sl_experience", to(experience));
-    
-    if (DarkRP) then
-        ply:setDarkRPVar("level", to(level));
-    end
 
     ply:SL_SetInteger("experience", to(experience));
     ply:SL_SetInteger("ability_points", to(points));

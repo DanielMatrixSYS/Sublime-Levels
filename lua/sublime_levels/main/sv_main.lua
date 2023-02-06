@@ -243,10 +243,6 @@ net.Receive("Sublime.AdminAdjustData", function(_, ply)
             target:SetNW2Int("sl_level", after);
             target:SetNW2Int("sl_experience", 0);
 
-            if (DarkRP) then
-                target:setDarkRPVar("level", after);
-            end
-
             Sublime.Query(Sublime.SQL:FormatSQL("UPDATE Sublime_Levels SET Level = '%s', Experience = '0', NeededExperience = '%s' WHERE SteamID = '%s'", after, target:SL_GetNeededExperience(), target:SteamID64()));
 
             Sublime.Print("%s has taken %i levels from %s.", ply:Nick(), value, target:Nick());
