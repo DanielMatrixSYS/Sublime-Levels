@@ -111,10 +111,6 @@ function SQL:InitializePlayerFromMySQL(ply)
 
         ply:SL_SetInteger("experience", to(data[1].Experience));
 
-        if (DarkRP) then
-            ply:setDarkRPVar("level", to(data[1].Level));
-        end
-
         Sublime.Print("%s is level %i with %s experience", ply:Nick(), data[1].Level, string.Comma(data[1].Experience));
     end);
     
