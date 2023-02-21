@@ -1,5 +1,3 @@
-
-
 local path  = Sublime.GetCurrentPath();
 local SKILL = {};
 

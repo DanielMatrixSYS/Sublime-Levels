@@ -3,9 +3,6 @@ local gmatch    = string.gmatch;
 local replace   = string.Replace;
 local lang      = GetConVar("gmod_language"):GetString();
 
----
----  Language Function
----
 function Sublime.L(key, ...)
     local curLang = Sublime.Languages[lang] or Sublime.Languages["en"];
 
