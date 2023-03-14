@@ -109,12 +109,8 @@ hook.Add("Initialize", path, function()
 end);
 
 hook.Add("PlayerInitialSpawn", path, function(ply)
-    if (not IsValid(ply) or ply:IsBot()) then
-        return;
-    end
-
     timer.Simple(2, function()
-        if (IsValid(ply)) then
+        if (IsValid(ply) and not ply:IsBot()) then
             SQL:InitializePlayerForSQLite(ply);
         end
     end);

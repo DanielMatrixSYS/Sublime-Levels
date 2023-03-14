@@ -123,12 +123,8 @@ function SQL:InitializePlayerFromMySQL(ply)
 end
 
 hook.Add("PlayerInitialSpawn", path, function(ply)
-    if (not IsValid(ply) or ply:IsBot()) then
-        return;
-    end
-
     timer.Simple(2, function()
-        if (IsValid(ply) and not Sublime.MySQL.ImportStarted) then
+        if (IsValid(ply) and not ply:IsBot() and not Sublime.MySQL.ImportStarted) then
             SQL:InitializePlayerFromMySQL(ply);
         end
     end);
