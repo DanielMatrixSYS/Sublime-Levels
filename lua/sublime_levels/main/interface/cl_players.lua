@@ -40,7 +40,7 @@ function panel:AddPlayer(parent, ply)
             s.Avatar:SetSize(s.Avatar.MaskSize, s.Avatar.MaskSize);
         end
     end
-    
+
     parent.Players[nextPlayer].Paint = function(s, w, h)
         draw.RoundedBox(8, 0, 0, w, h, self.CA(self.C.Outline, s.Alpha));
 

@@ -37,7 +37,7 @@ end);
 
 hook.Add("PlayerInitialSpawn", path, function(ply)
     timer.Simple(2, function()
-        if (IsValid(ply)) then
+        if (IsValid(ply) and not ply:IsBot()) then
             Sublime.Settings.Sync(ply);
         end
     end);
