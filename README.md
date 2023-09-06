@@ -24,6 +24,10 @@ I solely created Sublime Levels. While you're encouraged to utilize and modify t
 
 I value your feedback. While I may not always be available for feature additions, I'm always open to addressing and rectifying bugs.
 
+## Installation
+
+Drag and drop the folder within the ZIP file into your garrysmod/addons folder. Restart the server.
+
 ## A Quick Note
 
 The addon was once available for purchase on gmodstore. Balancing multiple commitments led to the decision of making it free for the community. While I might not always be available for feature implementations, bug fixes are always on my radar.
