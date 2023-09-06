@@ -1,29 +1,31 @@
-Sublime Levels
+# Sublime Levels
 
-Sublime Levels is a comprehensive leveling system designed for unparalleled flexibility and richness. It equips users with a suite of features essential for any robust leveling system.
-Features:
+Sublime Levels provides a comprehensive leveling system packed with a myriad of features essential for an immersive gameplay experience.
 
-    Levels & Experience: Set the foundation for progression.
-    Skill Tree/Perks: Enhance gameplay with unique abilities and skills.
-    Leaderboards: Rank players based on their achievements.
-    In-game Admin Configuration: Modify settings on-the-fly.
-    Database Support: Works with SQLite and MySQL.
+## Features
 
-Visit gmodstore for the complete changelog, screenshots, and detailed features.
-Contribution & Usage:
+- **Levels & Experience:** Set the foundation for progression.
+- **Skill Tree/Perks:** Augment gameplay with specialized abilities and skills.
+- **Leaderboards:** Compete and rank based on player achievements.
+- **In-game Admin Configuration:** Modify settings seamlessly.
+- **Database Support:** Compatible with SQLite and MySQL.
 
-This project was singularly crafted by me, from inception to its current form. Here's how you can interact with it:
+For a complete changelog, images, and feature details, check [gmodstore](https://www.gmodstore.com/market/view/sublime-levels).
 
-    Usage: Feel free to utilize the code as per your needs. Modify, adapt, but always give credit. Republishing the addon as-is, however, is prohibited.
+## Contribution & Use Guidelines
 
-    Contribution: Keen on improving Sublime Levels? Open a pull request! But remember:
-        Maintain code consistency.
-        Propose small, incremental changes rather than a massive overhaul.
-        Large pull requests with extensive changes will not be entertained.
+I solely created Sublime Levels. While you're encouraged to utilize and modify the code, kindly adhere to the following:
 
-Your inputs are valued. Although I may not be frequently available to incorporate feature requests, I'm always on the lookout for bug fixes.
-Note:
+- **Usage:** You're free to adapt and change the code, but ensure you give proper credit. Direct republishing of the addon is not permitted.
+  
+- **Contributions:** Want to enhance Sublime Levels? Submit a pull request! But keep in mind:
+  - Stick to the existing code standards.
+  - Make small, incremental changes. Large, comprehensive PRs are discouraged and may not be approved.
 
-The addon was once retailing on gmodstore. However, balancing a job, personal life, academic commitments, and gmodstore was overwhelming. Thus, I've decided to offer it for free to the community.
+I value your feedback. While I may not always be available for feature additions, I'm always open to addressing and rectifying bugs.
 
-For queries, feel free to reach out. However, please be mindful of the fact that due to my busy schedule, feature requests might not always get immediate attention. Bug reports, on the other hand, are always welcome.
+## A Quick Note
+
+The addon was once available for purchase on gmodstore. Balancing multiple commitments led to the decision of making it free for the community. While I might not always be available for feature implementations, bug fixes are always on my radar.
+
+For any inquiries or reports, feel free to get in touch. Just be aware, due to my busy schedule, not all feature requests may receive immediate attention. 
