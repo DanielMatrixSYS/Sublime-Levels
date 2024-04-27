@@ -27,6 +27,7 @@ I value your feedback. While I may not always be available for feature additions
 ## Installation
 
 Drag and drop the folder within the ZIP file into your garrysmod/addons folder. Restart the server.
+Workshop content: https://steamcommunity.com/sharedfiles/filedetails/?id=1976896279
 
 ## A Quick Note
 
