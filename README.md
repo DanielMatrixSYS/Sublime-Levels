@@ -2,6 +2,8 @@
 
 Sublime Levels provides a comprehensive leveling system packed with a myriad of features essential for an immersive gameplay experience.
 
+### Please note, whilst the project has been recently released on github, the addon itself is 3, 5+ years old. The code standards back then were not as strict as it is today. The code standard I have today is not as bad as it was then. You have been warned.
+
 ## Features
 
 - **Levels & Experience:** Set the foundation for progression.
