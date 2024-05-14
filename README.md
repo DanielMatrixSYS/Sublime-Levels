@@ -2,8 +2,6 @@
 
 Sublime Levels provides a comprehensive leveling system packed with a myriad of features essential for an immersive gameplay experience.
 
-### Please note, whilst the project has been recently released on github, the addon itself is 3, 5+ years old. The code standards back then were not as strict as it is today. The code standard I have today is not as bad as it was then. You have been warned.
-
 ## Features
 
 - **Levels & Experience:** Set the foundation for progression.
@@ -35,4 +33,6 @@ Workshop content: https://steamcommunity.com/sharedfiles/filedetails/?id=1976896
 
 The addon was once available for purchase on gmodstore. Balancing multiple commitments led to the decision of making it free for the community. While I might not always be available for feature implementations, bug fixes are always on my radar.
 
-For any inquiries or reports, feel free to get in touch. Just be aware, due to my busy schedule, not all feature requests may receive immediate attention. 
+For any inquiries or reports, feel free to get in touch. Just be aware, due to my busy schedule, not all feature requests may receive immediate attention.
+
+The codebase, while functional, is quite old and is not up to par with todays standards. 
