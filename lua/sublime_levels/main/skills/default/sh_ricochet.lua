@@ -1,5 +1,3 @@
-
-
 local path  = Sublime.GetCurrentPath();
 local SKILL = {};
 
@@ -10,7 +8,7 @@ SKILL.Name              = "Ricochet";
 SKILL.Description       = "The bullets that hit you have a chance to ricochet back to the shooter.\nUp to 20%";
 
 -- If the category of the skill does not exist then we will automatically create it.
-SKILL.Category          = "General"
+SKILL.Category          = "Weapons"
 
 -- This is the identifier in the database, needs to be unqiue.
 SKILL.Identifier        = "ricochet";
