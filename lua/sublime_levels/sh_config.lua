@@ -44,6 +44,19 @@ Sublime.Config.SpecExperience = false;
 --- ACCESS
 ---
 
+---
+--- Disable the ability to gain skill points when the user levels up.
+--- This is useful if you want to disable the ability to gain skill points.
+--- 
+--- Please note this does not disable the skill points system, it just disables the ability to gain skill points upon leveling up.
+---
+--- Set to true to disable the ability to gain skill points when the user levels up.
+--- 
+--- Default: false
+---
+Sublime.Config.DisableSkillpointsOnLevel = false;
+
+
 --- Who has access to the config in-game?
 Sublime.Config.ConfigAccess = {
     ["superadmin"] = true

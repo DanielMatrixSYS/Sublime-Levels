@@ -52,8 +52,11 @@ hook.Add("PlayerSay", path, function(ply, text)
 end);
 
 hook.Add("SL.PlayerLeveledUp", path, function(ply, new, points)
-    ply:SL_AddSkillPoint(points);
+    if (not Sublime.Config.DisableSkillpointsOnLevel) then
+        ply:SL_AddSkillPoint(points);
+    end
 
+    
     local broadcast = Sublime.Settings.Get("other", "should_broadcast_levelup", "boolean");
 
     if (broadcast) then
