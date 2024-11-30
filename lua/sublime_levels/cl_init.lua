@@ -3,32 +3,6 @@ local approach = math.Approach;
 local round, min, floor, clamp = math.Round, math.min, math.floor, math.Clamp;
 local ca = ColorAlpha;
 
----
---- DrawPanelBlur
----
-function Sublime:DrawPanelBlur(panel, blur)
-    local blur = (blur or 5);
-    local sw = ScrW();
-    local sh = ScrH();
-
-    local x, y = panel:LocalToScreen(0, 0);
-    local w, h = panel:GetSize();
-
-    surface.SetDrawColor(0, 0, 0, 255);
-    surface.SetMaterial(mat);
-
-    local perX, perY = x / sw, y / sh;
-    local perW, perH = (x + w) / sw, (y + h) / sh;
-
-    for i = 1, blur do
-        mat:SetFloat("$blur", i);
-        mat:Recompute();
-
-        render.UpdateScreenEffectTexture();
-        surface.DrawTexturedRectUV(0, 0, w, h, perX, perY, perW, perH);
-    end
-end
-
 local ui;
 function Sublime.MakeNotification(header, desc, useDecline, useText)
     useDecline = useDecline or false;
